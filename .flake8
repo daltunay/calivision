@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 99
+plugins = flake8_black
+ignore = E501, E203, W503

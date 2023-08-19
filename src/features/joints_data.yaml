@@ -1,0 +1,86 @@
+# List of joint angles for action recognition using Mediapipe body landmarks
+
+# ARM ANGLES
+- # Left arm: Shoulder to Wrist
+  first: LEFT_SHOULDER
+  mid: LEFT_ELBOW
+  end: LEFT_WRIST
+
+- # Left arm: Elbow to Hip
+  first: LEFT_ELBOW
+  mid: LEFT_SHOULDER
+  end: LEFT_HIP
+
+- # Left arm: Shoulder to Knee
+  first: LEFT_SHOULDER
+  mid: LEFT_HIP
+  end: LEFT_KNEE
+
+- # Left arm: Elbow to Right Elbow
+  first: LEFT_ELBOW
+  mid: NOSE
+  end: RIGHT_ELBOW
+
+- # Right arm: Shoulder to Wrist
+  first: RIGHT_SHOULDER
+  mid: RIGHT_ELBOW
+  end: RIGHT_WRIST
+
+- # Right arm: Elbow to Hip
+  first: RIGHT_ELBOW
+  mid: RIGHT_SHOULDER
+  end: RIGHT_HIP
+
+- # Right arm: Shoulder to Knee
+  first: RIGHT_SHOULDER
+  mid: RIGHT_HIP
+  end: RIGHT_KNEE
+
+- # Right arm: Elbow to Left Elbow
+  first: RIGHT_ELBOW
+  mid: NOSE
+  end: LEFT_ELBOW
+
+# HIP ANGLES
+- # Hip shift: Left Hip to Right Shoulder
+  first: LEFT_HIP
+  mid: RIGHT_SHOULDER
+  end: LEFT_SHOULDER
+
+- # Hip shift: Right Hip to Left Shoulder
+  first: RIGHT_HIP
+  mid: LEFT_SHOULDER
+  end: RIGHT_SHOULDER
+
+# LEG ANGLES
+- # Left leg: Hip to Ankle
+  first: LEFT_HIP
+  mid: LEFT_KNEE
+  end: LEFT_ANKLE
+
+- # Right leg: Hip to Ankle
+  first: RIGHT_HIP
+  mid: RIGHT_KNEE
+  end: RIGHT_ANKLE
+
+# TORSO ANGLES
+- # Torso twist: Left Shoulder to Right Hip
+  first: LEFT_SHOULDER
+  mid: LEFT_HIP
+  end: RIGHT_HIP
+
+- # Torso twist: Right Shoulder to Left Hip
+  first: RIGHT_SHOULDER
+  mid: RIGHT_HIP
+  end: LEFT_HIP
+
+# SPINE ANGLES
+- # Neck to Left Hip
+  first: NOSE
+  mid: LEFT_SHOULDER
+  end: LEFT_HIP
+
+- # Neck to Right Hip
+  first: NOSE
+  mid: RIGHT_SHOULDER
+  end: RIGHT_HIP

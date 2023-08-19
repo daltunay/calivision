@@ -1,0 +1,237 @@
+import logging
+from typing import List, Literal, Union
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from sklearn.preprocessing import LabelEncoder
+from torch.utils.data import DataLoader, TensorDataset
+from tqdm import tqdm
+
+from ..features import AngleSeries, JointSeries
+from .model import ClassifierModel
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
+
+
+class LSTMModel(nn.Module):
+    """LSTM-based Classifier.
+
+    This class defines the architecture of an LSTM-based classifier for
+    sequence classification tasks. It encapsulates the core model
+    architecture and its forward pass.
+    """
+
+    def __init__(
+        self,
+        num_classes: int,
+        input_size: int,
+        hidden_size: int,
+        num_layers: int,
+    ):
+        """Initialize the LSTMModel object.
+
+        Args:
+            num_classes (int): Number of classes for classification.
+            input_size (int): Size of the input features.
+            hidden_size (int): Size of the hidden state of the LSTM.
+            num_layers (int): Number of LSTM layers.
+        """
+        super(LSTMModel, self).__init__()
+        self.num_classes = num_classes
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+
+        self.label_encoder = LabelEncoder()
+
+        self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.num_layers, batch_first=True)
+        self.fc = nn.Linear(self.hidden_size, self.num_classes)
+
+    def forward(self, x):
+        lstm_out, _ = self.lstm(x)
+        output = self.fc(lstm_out[:, -1, :])  # Get the output of the last time step
+        return output
+
+
+class LSTMClassifier(ClassifierModel):
+    """Wrapper for Training and Using an LSTM Classifier.
+
+    This class provides a higher-level interface for training an
+    LSTMModel on input data and making predictions using the trained
+    model. It separates concerns related to training and prediction from
+    the core architecture of the LSTM model.
+    """
+
+    def __init__(
+        self,
+        feature_type: Literal["joints", "angles", "fourier"],
+        num_classes: int,
+        input_size: int,
+        hidden_size: int,
+        num_layers: int,
+        num_epochs: int,
+        batch_size: int,
+        learning_rate: float,
+    ):
+        """Initialize the LSTMClassifier object.
+
+        Args:
+            num_classes (int): Number of classes for classification.
+            input_size (int): Size of the input features.
+            hidden_size (int): Size of the hidden state of the LSTM.
+            num_layers (int): Number of LSTM layers.
+            num_epochs (int): Number of training epochs.
+            batch_size (int): Batch size for training.
+            learning_rate (float): Learning rate for optimizer.
+        """
+        logging.info(
+            f"Initializing LSTM classifier ({hidden_size=}, {num_layers=}, {num_epochs=}, {batch_size=}, {learning_rate=})"
+        )
+        super().__init__(model_type="lstm", feature_type=self.feature_type)
+        self.num_classes = num_classes
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.num_epochs = num_epochs
+        self.batch_size = batch_size
+        self.learning_rate = learning_rate
+
+        self.label_encoder = LabelEncoder()
+
+        self.criterion = nn.CrossEntropyLoss()
+        self.model = LSTMModel(num_classes, input_size, hidden_size, num_layers)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
+
+    def _convert_to_tensors(self, X: List[Union[JointSeries, AngleSeries]]) -> torch.Tensor:
+        """Convert a list of JointSeries or AngleSeries objects to a stacked tensor.
+
+        Args:
+            X (List[Union[JointSeries, AngleSeries]]): List of input data.
+
+        Returns:
+            torch.Tensor: Stacked tensor containing input data.
+        """
+        max_length = max(x.shape[0] for x in X)  # padding time series length
+        tensors = []
+        for x in X:
+            x = x.reindex(range(max_length), fill_value=0)
+            tensor = torch.Tensor(x.values)
+            tensors.append(tensor)
+        return torch.stack(tensors)
+
+    def fit(self, X: List[Union[JointSeries, AngleSeries]], y: List[str]) -> None:
+        """Fit the LSTM model to the training data.
+
+        Args:
+            X (List[Union[JointSeries, AngleSeries]]): Input data.
+            y (List[str]): List of class labels.
+        """
+        logging.info(
+            f"Fitting LSTM classifier to training data: {len(X)} sample(s), {len(set(y))} unique labels"
+        )
+        y_encoded = self.label_encoder.fit_transform(y)
+        y_encoded_tensors = torch.LongTensor(y_encoded)
+
+        X_tensors_stacked = self._convert_to_tensors(X)
+        dataset = TensorDataset(X_tensors_stacked, y_encoded_tensors)
+
+        train_loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
+
+        # Initialize tqdm progress bar
+        pbar = tqdm(
+            total=len(train_loader) * self.num_epochs,
+            desc="[TRAINING] LSTM",
+            position=0,
+            leave=True,
+            dynamic_ncols=True,
+        )
+
+        for epoch in range(1, self.num_epochs + 1):
+            pbar.set_description(f"[IN PROGRESS] LSTM training - {epoch=}")
+
+            total_loss = 0.0  # Initialize total loss for the epoch
+            num_batches = 0  # Initialize the number of batches processed
+
+            for X_batch, y_batch in train_loader:
+                self.optimizer.zero_grad()
+                outputs = self.model(X_batch)
+                loss = self.criterion(outputs, y_batch)
+                loss.backward()
+                self.optimizer.step()
+
+                total_loss += loss.item()  # Add the loss value to the total loss for the epoch
+                num_batches += 1
+
+                # Print average loss every 'print_freq' batches
+                print_freq = 10  # Adjust this value as needed
+                if num_batches % print_freq == 0:
+                    avg_loss = total_loss / num_batches
+                    pbar.set_postfix({"avg_loss": avg_loss})
+                    pbar.update(print_freq)
+
+            # Update the progress bar after completing the epoch
+            avg_loss = total_loss / num_batches
+            pbar.set_postfix({"avg_loss": avg_loss})
+            pbar.update(num_batches % print_freq)
+
+        pbar.set_description("[DONE] LSTM training")
+        pbar.close()
+        return self
+
+    def predict(
+        self, X: Union[List[Union[JointSeries, AngleSeries]], Union[JointSeries, AngleSeries]]
+    ) -> Union[List[str], str]:
+        """Predict class labels for input data.
+
+        Args:
+            X (Union[List[Union[JointSeries, AngleSeries]], Union[JointSeries, AngleSeries]]): Input data.
+
+        Returns:
+            Union[List[str], str]: Predicted class labels.
+        """
+        if not isinstance(X, list):
+            single_input = True
+            X = [X]
+        else:
+            single_input = False
+        logging.info(f"Predicting class labels for input data: {len(X)} sample(s)")
+        data_tensors = self._convert_to_tensors(X)
+        predictions = []
+        with torch.no_grad():
+            for x in data_tensors:
+                output = self.model(x.unsqueeze(0))
+                _, predicted = torch.max(output, 1)
+                predicted_labels = self.label_encoder.inverse_transform(predicted.numpy())
+                predictions.append(predicted_labels[0])
+        return predictions[0] if single_input else predictions
+
+    def predict_probas(self, X: List[Union[JointSeries, AngleSeries]]) -> List[List[float]]:
+        """Predict class probabilities for input data.
+
+        Args:
+            X (List[Union[JointSeries, AngleSeries]]): Input data.
+
+        Returns:
+            List[List[float]]: List of predicted class probabilities.
+        """
+        if not isinstance(X, list):
+            single_input = True
+            X = [X]
+        else:
+            single_input = False
+        logging.info(f"Predicting class label probabilities for input data: {len(X)} sample(s)")
+        data_tensors = self._convert_to_tensors(X)
+        probas = []
+        softmax = nn.Softmax(dim=1)
+        with torch.no_grad():
+            for x in data_tensors:
+                output = self.model(x.unsqueeze(0))
+                predicted_probs = softmax(output)
+                probas.append(predicted_probs[0].tolist())
+        return probas if single_input else probas

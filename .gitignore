@@ -1,0 +1,56 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Distribution / packaging
+dist/
+build/
+eggs/
+*.egg-info/
+
+# Development
+*.swp
+*~
+*.bak
+*.tmp
+
+# Virtualenvs
+venv/
+env/
+.env
+
+# IPython
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# vscode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Compiled files
+*.pyc
+
+# Compiled Python modules
+__pycache__/
+
+# Videos
+*.avi
+*.mp4
+*.mov
+*.mkv
+*.flv
+*.wmv
+*.mpeg
+*.mpg
+*.ogv
+*.webm
+*.swf
+
+# Custom
+.mypy_cache/
+UCF50.json
