@@ -216,7 +216,7 @@ class VideoProcessor:
         return annotated_image
 
     def annotate_image(self, image, base_landmarks):
-        """Annotate a single image"""
+        """Annotate a single image."""
         # Similar to process_frame, but only return annotated frame
         annotated_frame = self._show_landmarks(image, base_landmarks)
         annotated_frame = self._show_time(annotated_frame, len(self.processed_frames) / self.fps)

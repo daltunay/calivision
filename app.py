@@ -1,16 +1,18 @@
+import json
+
 import cv2
-from flask import Flask, Response, render_template, request, url_for, redirect, send_file
-from src.video_processing.process_video import PoseEstimator, VideoProcessor
+import plotly
+from flask import Flask, Response, redirect, render_template, request, send_file, url_for
+
 from src.features import AngleSeries, FourierSeries, JointSeries
+from src.video_processing.process_video import PoseEstimator, VideoProcessor
 from src.visualization import (
-    plot_joint_series,
     plot_angle_evolution,
     plot_angle_heatmap,
     plot_fourier_magnitude,
     plot_fourier_phase,
+    plot_joint_series,
 )
-import json
-import plotly
 
 app = Flask(__name__)
 
@@ -135,12 +137,14 @@ def process_data_series():
             plot_fourier_phase(fourier_series), cls=plotly.utils.PlotlyJSONEncoder
         )
 
-        return render_template("explore_processed_data.html", 
-                               joint_series_plot=joint_series_plot,
-                               angle_evolution_plot=angle_evolution_plot,
-                               angle_heatmap_plot=angle_heatmap_plot,
-                               fourier_magnitude_plot=fourier_magnitude_plot,
-                               fourier_phase_plot=fourier_phase_plot)
+        return render_template(
+            "explore_processed_data.html",
+            joint_series_plot=joint_series_plot,
+            angle_evolution_plot=angle_evolution_plot,
+            angle_heatmap_plot=angle_heatmap_plot,
+            fourier_magnitude_plot=fourier_magnitude_plot,
+            fourier_phase_plot=fourier_phase_plot,
+        )
     else:
         return "Landmarks series data not available."
 
