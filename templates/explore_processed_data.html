@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Processed Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        a {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="{{ url_for('index') }}" class="back-link">Back to Index</a>
+        <h1>Explore Processed Data</h1>
+
+        <h2>Joint Series Visualization</h2>
+        <div>
+            <a href="{{ url_for('visualize_joints') }}">View Joint Series Visualization</a>
+        </div>
+
+        <h2>Angle Visualizations</h2>
+        <div>
+            <a href="{{ url_for('visualize_angles') }}">View Angle Visualizations</a>
+        </div>
+
+        <h2>Fourier Visualizations</h2>
+        <div>
+            <a href="{{ url_for('show_visualize_fourier') }}">View Fourier Visualizations</a>
+        </div>
+    </div>
+</body>
+
+</html>

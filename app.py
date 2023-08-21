@@ -67,23 +67,23 @@ def terminate():
     return redirect(url_for("index"))
 
 
-@app.route("/show_joint_series")
-def joint_visualization():
+@app.route("/visualize_joints")
+def visualize_joints():
     global joint_series_plot
 
     if joint_series_plot is not None:
-        return render_template("joint_visualization.html", joint_series_plot=joint_series_plot)
+        return render_template("visualize_joints.html", joint_series_plot=joint_series_plot)
     else:
         return "Joint series plot data not available."
 
 
-@app.route("/show_angle_visualizations")
-def show_angle_visualization():
+@app.route("/visualize_angles")
+def visualize_angles():
     global angle_evolution_plot, angle_heatmap_plot
 
     if angle_evolution_plot is not None and angle_heatmap_plot is not None:
         return render_template(
-            "angle_visualization.html",
+            "visualize_angles.html",
             angle_evolution_plot=angle_evolution_plot,
             angle_heatmap_plot=angle_heatmap_plot,
         )
@@ -91,13 +91,13 @@ def show_angle_visualization():
         return "Angle visualization data not available."
 
 
-@app.route("/show_fourier_visualizations")
-def show_fourier_visualization():
+@app.route("/visualize_fourier")
+def show_visualize_fourier():
     global fourier_magnitude_plot, fourier_phase_plot
 
     if fourier_magnitude_plot is not None and fourier_phase_plot is not None:
         return render_template(
-            "fourier_visualization.html",
+            "visualize_fourier.html",
             fourier_magnitude_plot=fourier_magnitude_plot,
             fourier_phase_plot=fourier_phase_plot,
         )
@@ -135,7 +135,7 @@ def process_data_series():
             plot_fourier_phase(fourier_series), cls=plotly.utils.PlotlyJSONEncoder
         )
 
-        return render_template("data_processing_options.html", 
+        return render_template("explore_processed_data.html", 
                                joint_series_plot=joint_series_plot,
                                angle_evolution_plot=angle_evolution_plot,
                                angle_heatmap_plot=angle_heatmap_plot,
@@ -145,9 +145,9 @@ def process_data_series():
         return "Landmarks series data not available."
 
 
-@app.route("/data_processing_options", methods=["GET"])
-def data_processing_options():
-    return render_template("data_processing_options.html")
+@app.route("/explore_processed_data", methods=["GET"])
+def explore_processed_data():
+    return render_template("explore_processed_data.html")
 
 
 def generate_frames():

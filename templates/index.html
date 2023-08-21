@@ -3,54 +3,113 @@
 
 <head>
     <title>Body Pose Estimation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .parameter {
+            flex-basis: calc(33.33% - 20px);
+            margin-bottom: 10px;
+        }
+
+        .slider {
+            width: 100%;
+        }
+
+        .button-container {
+            text-align: center;
+            width: 100%;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Body Pose Estimation</h1>
+    <div class="container">
+        <h1>Body Pose Estimation</h1>
 
-    <!-- Form for parameter input and starting pose estimation -->
-    <form method="POST">
-        <label for="min_detection_confidence">Min Detection Confidence:</label>
-        <input type="range" id="min_detection_confidence" name="min_detection_confidence" min="0" max="1" step="0.01"
-            value="0.5">
-        <span id="min_detection_value">0.5</span>
-        <br>
+        <form method="POST">
+            <div class="parameter">
+                <label for="min_detection_confidence">Min Detection Confidence:</label>
+                <input class="slider" type="range" id="min_detection_confidence" name="min_detection_confidence"
+                    min="0" max="1" step="0.01" value="0.5" onchange="updateMinDetectionConfidence(this.value)">
+                <span id="min_detection_value">0.5</span>
+            </div>
 
-        <label for="min_tracking_confidence">Min Tracking Confidence:</label>
-        <input type="range" id="min_tracking_confidence" name="min_tracking_confidence" min="0" max="1" step="0.01"
-            value="0.5">
-        <span id="min_tracking_value">0.5</span>
-        <br>
+            <div class="parameter">
+                <label for="min_tracking_confidence">Min Tracking Confidence:</label>
+                <input class="slider" type="range" id="min_tracking_confidence" name="min_tracking_confidence" min="0"
+                    max="1" step="0.01" value="0.5" onchange="updateMinTrackingConfidence(this.value)">
+                <span id="min_tracking_value">0.5</span>
+            </div>
 
-        <label for="model_complexity">Model Complexity:</label>
-        <select id="model_complexity" name="model_complexity">
-            <option value="0">0</option>
-            <option value="1" selected>1</option>
-            <option value="2">2</option>
-        </select>
-        <br>
+            <div class="parameter">
+                <label for="model_complexity">Model Complexity:</label>
+                <select id="model_complexity" name="model_complexity">
+                    <option value="0">0</option>
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
 
-        <input type="submit" value="Start Pose Estimation">
-    </form>
+            <div class="button-container">
+                <input type="submit" value="Start Pose Estimation">
+            </div>
+        </form>
 
-    <br>
+        <img src="{{ url_for('video_feed') }}" alt="Video Feed">
 
-    <!-- Video feed -->
-    <img src="{{ url_for('video_feed') }}">
-    <br>
+        <form method="POST" action="/terminate">
+            <div class="button-container">
+                <input type="submit" value="Terminate Pose Estimation">
+            </div>
+        </form>
 
-    <!-- Form to terminate pose estimation -->
-    <form method="POST" action="/terminate">
-        <input type="submit" value="Terminate Pose Estimation">
-    </form>
+        <form method="GET" action="/process_data_series">
+            <div class="button-container">
+                <input type="submit" value="Process Data Series">
+            </div>
+        </form>
+    </div>
 
-    <br>
+    <script>
+        function updateMinDetectionConfidence(value) {
+            document.getElementById("min_detection_value").textContent = value;
+        }
 
-    <!-- Form to process data series -->
-    <form method="GET" action="/process_data_series">
-        <input type="submit" value="Process Data Series">
-    </form>
-
+        function updateMinTrackingConfidence(value) {
+            document.getElementById("min_tracking_value").textContent = value;
+        }
+    </script>
 </body>
 
 </html>

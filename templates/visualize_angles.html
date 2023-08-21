@@ -11,6 +11,8 @@
 <body>
     <div id="angle-evolution-plot"></div>
     <div id="angle-heatmap-plot"></div>
+    <a href="{{ url_for('explore_processed_data') }}">Back to Explore Processed Data</a>
+    <a href="{{ url_for('index') }}">Back to Index</a>
     <script>
         const angleEvolutionData = {{ angle_evolution_plot| safe }};
         Plotly.newPlot('angle-evolution-plot', angleEvolutionData);
