@@ -1,1 +1,1 @@
-from .misc import calculate_angle, format_joint_name
+from .misc import calculate_angle, calculate_new_dimensions, format_joint_name
