@@ -26,6 +26,7 @@ class VideoProcessor:
         pose_estimator: PoseEstimator,
         path: Optional[str] = None,
         webcam: Optional[int] = None,
+        flask: bool = False,
     ) -> None:
         """Initialize the VideoProcessor object.
 
@@ -33,10 +34,12 @@ class VideoProcessor:
             pose_estimator (PoseEstimator): Pose estimator object.
             path (Optional[str]): Path to a local video. Leave as None if using webcam input.
             webcam (Optional[int]): Webcam source (0 or 1). Leave as None if using a video path.
+            flask (bool): Whether this is run inside a Flask app or not.
         """
         self.pose_estimator: PoseEstimator = pose_estimator
         self.path: Optional[str] = path
         self.webcam: Optional[int] = webcam
+        self.flask: bool = flask
 
         self.frame_count: Union[int, None] = None
         self.fps: Union[int, None] = None
@@ -69,7 +72,6 @@ class VideoProcessor:
         show: bool = False,
         width: Optional[int] = None,
         height: Optional[int] = None,
-        flask: bool = False,
     ) -> None:
         """Extract landmarks from each frame of the video and optionally show them.
 
@@ -77,40 +79,44 @@ class VideoProcessor:
             show (bool): Whether to show the video and landmarks in an output window or not.
             width (Optional[int]): Desired width for resizing.
             height (Optional[int]): Desired height for resizing.
-            flask (bool): Whether this is run inside a Flask app or not.
         """
         # Manage the path and webcam inputs
         if self.path and self.webcam:
             raise ValueError("Both 'path' and 'webcam' cannot be specified at the same time")
-        (input_type, source) = ("path", self.path) if self.path else ("webcam", self.webcam)
-        logging.info(f"Initializing VideoProcessor for input: {input_type} (source {source})")
+        (self.input_type, self.source) = (
+            ("path", self.path) if self.path else ("webcam", self.webcam)
+        )
+        logging.info(
+            f"Initializing VideoProcessor for input: {self.input_type} (source {self.source})"
+        )
 
         # Video capture (local or webcam)
-        cap = cv2.VideoCapture(source)
-        self.frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        self.fps = int(cap.get(cv2.CAP_PROP_FPS))
+        self.cap = cv2.VideoCapture(self.source)
+        self.frame_count = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        self.fps = int(self.cap.get(cv2.CAP_PROP_FPS))
 
         # Resize video
-        original_width, original_height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(
-            cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        original_width, original_height = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(
+            self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
         )
         new_width, new_height = calculate_new_dimensions(
             original_width, original_height, width, height
         )
 
         # Initialization
-        pbar = self._initialize_progress_bar(input_type, source)
-        success, frame = cap.read()  # Read first frame
+        success, frame = self.cap.read()  # Read first frame
+        self.pbar = self._initialize_progress_bar()
 
         # Loop over all frames
         while success:
-            pbar.update(1)
+            self.pbar.update(1)
 
             # Process frame
             frame = cv2.resize(frame, (new_width, new_height))
             base_landmarks, normalized_world_landmarks = self.process_frame(frame)
-            self.normalized_world_landmarks_series.append(normalized_world_landmarks)
-            self.base_landmarks_series.append(base_landmarks)
+            if base_landmarks:
+                self.normalized_world_landmarks_series.append(normalized_world_landmarks)
+                self.base_landmarks_series.append(base_landmarks)
 
             if show:
                 # Annotate frames with landmarks and time
@@ -118,7 +124,7 @@ class VideoProcessor:
                 self.annotated_processed_frames.append(annotated_image)
 
                 # Show frame
-                if flask:
+                if self.flask:
                     yield annotated_image
                 else:
                     cv2.imshow(
@@ -132,32 +138,35 @@ class VideoProcessor:
                     cv2.destroyAllWindows()
                     break
 
-            success, frame = cap.read()  # Read next frame
+            success, frame = self.cap.read()  # Read next frame
 
         # Cleanup
-        self._cleanup(pbar, cap, input_type, source)
-        self.frame_count = len(self.processed_frames)
-        logging.info(
-            f"Body pose estimation completed ({self.frame_count} frames, {self.frame_count / self.fps:.2f}s)."
-        )
+        self._terminate()
         return None
 
-    def _initialize_progress_bar(self, input_type, source):
+    def _initialize_progress_bar(self):
         pbar = tqdm(
-            total=self.frame_count if input_type == "path" else None,
-            desc=f"[IN PROGRESS] Body pose estimation: {input_type=}, {source=}",
+            total=self.frame_count if self.input_type == "path" else None,
+            desc=f"[IN PROGRESS] Body pose estimation: {self.input_type=}, {self.source=}",
             position=0,
             leave=True,
             dynamic_ncols=True,
         )
         return pbar
 
-    def _cleanup(self, pbar, cap, input_type, source):
+    def _terminate(self):
         cv2.waitKey(1)
-        pbar.set_description(f"[DONE] Body pose estimation: {input_type=}, {source=}")
-        pbar.close()
-        cap.release()
+        self.pbar.set_description(
+            f"[DONE] Body pose estimation: {self.input_type=}, {self.source=}"
+        )
+        self.pbar.close()
+        self.cap.release()
         cv2.destroyAllWindows()
+        self.frame_count = len(self.processed_frames)
+        logging.info(
+            f"Body pose estimation completed ({self.frame_count} frames, {self.frame_count / self.fps:.2f}s)."
+        )
+        return None
 
     @staticmethod
     def _show_landmarks(

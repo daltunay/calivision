@@ -7,7 +7,50 @@
 
 <body>
     <h1>Body Pose Estimation</h1>
-    <img src="{{ url_for('video_feed') }}" width="640" height="480">
+
+    <!-- Form for parameter input and starting pose estimation -->
+    <form method="POST">
+        <label for="min_detection_confidence">Min Detection Confidence:</label>
+        <input type="range" id="min_detection_confidence" name="min_detection_confidence" min="0" max="1" step="0.01"
+            value="0.5">
+        <span id="min_detection_value">0.5</span>
+        <br>
+
+        <label for="min_tracking_confidence">Min Tracking Confidence:</label>
+        <input type="range" id="min_tracking_confidence" name="min_tracking_confidence" min="0" max="1" step="0.01"
+            value="0.5">
+        <span id="min_tracking_value">0.5</span>
+        <br>
+
+        <label for="model_complexity">Model Complexity:</label>
+        <select id="model_complexity" name="model_complexity">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+        </select>
+        <br>
+
+        <input type="submit" value="Start Pose Estimation">
+    </form>
+
+    <br>
+
+    <!-- Video feed -->
+    <img src="{{ url_for('video_feed') }}">
+    <br>
+
+    <!-- Form to terminate pose estimation -->
+    <form method="POST" action="/terminate">
+        <input type="submit" value="Terminate Pose Estimation">
+    </form>
+
+    <br>
+
+    <!-- Form to process data series -->
+    <form method="GET" action="/process_data_series">
+        <input type="submit" value="Process Data Series">
+    </form>
+
 </body>
 
 </html>

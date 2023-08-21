@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fourier Visualizations</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div id="fourier-magnitude-plot"></div>
+    <div id="fourier-phase-plot"></div>
+    <script>
+        const fourierMagnitudeData = {{ fourier_magnitude_plot| safe }};
+        Plotly.newPlot('fourier-magnitude-plot', fourierMagnitudeData);
+
+        const fourierPhaseData = {{ fourier_phase_plot| safe }};
+        Plotly.newPlot('fourier-phase-plot', fourierPhaseData);
+    </script>
+</body>
+
+</html>

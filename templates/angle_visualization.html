@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angle Visualizations</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div id="angle-evolution-plot"></div>
+    <div id="angle-heatmap-plot"></div>
+    <script>
+        const angleEvolutionData = {{ angle_evolution_plot| safe }};
+        Plotly.newPlot('angle-evolution-plot', angleEvolutionData);
+
+        const angleHeatmapData = {{ angle_heatmap_plot| safe }};
+        Plotly.newPlot('angle-heatmap-plot', angleHeatmapData);
+    </script>
+</body>
+
+</html>
