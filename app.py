@@ -63,61 +63,59 @@ class PoseEstimationApp:
     def process_data_series(self):
         """Process data series to compute joint, angle, and Fourier series data."""
 
-        if self.landmarks_series is not None:
-            self.joint_series = JointSeries(landmarks_series=self.landmarks_series, fps=self.fps)
-            self.joint_series.smooth(smooth_fraction=0.1, inplace=True)
-            self.joint_series_plot = json.dumps(
-                plot_joint_series(self.joint_series, visibility_threshold=0.5),
-                cls=plotly.utils.PlotlyJSONEncoder,
-            )
+        if self.landmarks_series is None:
+            return "Pose estimation data not available."
 
-            self.angle_series = AngleSeries(joint_series=self.joint_series)
-            self.angle_series.smooth(smooth_fraction=0.1, inplace=True)
+        self.joint_series = JointSeries(landmarks_series=self.landmarks_series, fps=self.fps)
+        self.joint_series.smooth(smooth_fraction=0.1, inplace=True)
 
-            self.fourier_series = FourierSeries(angle_series=self.angle_series)
+        self.angle_series = AngleSeries(joint_series=self.joint_series)
+        self.angle_series.smooth(smooth_fraction=0.1, inplace=True)
+
+        self.fourier_series = FourierSeries(angle_series=self.angle_series)
 
     def visualize_joints(self):
         """Visualize the joint data."""
-        if self.joint_series_plot is not None:
-            return render_template(
-                "visualize_joints.html", joint_series_plot=self.joint_series_plot
-            )
-        else:
+        if self.joint_series_plot is None:
             return "Joint series plot data not available."
+
+        joint_series_plot = json.dumps(
+            plot_joint_series(self.joint_series, visibility_threshold=0.5),
+            cls=plotly.utils.PlotlyJSONEncoder,
+        )
+        return render_template("visualize_joints.html", joint_series_plot=joint_series_plot)
 
     def visualize_angles(self):
         """Visualize the angle data."""
-        if self.angle_series is not None:
-            angle_evolution_plot = json.dumps(
-                plot_angle_evolution(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
-            )
-            angle_heatmap_plot = json.dumps(
-                plot_angle_heatmap(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
-            )
-            return render_template(
-                "visualize_angles.html",
-                angle_evolution_plot=angle_evolution_plot,
-                angle_heatmap_plot=angle_heatmap_plot,
-            )
-        else:
+        if self.angle_series is None:
             return "Angle visualization data not available."
+        angle_evolution_plot = json.dumps(
+            plot_angle_evolution(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
+        )
+        angle_heatmap_plot = json.dumps(
+            plot_angle_heatmap(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
+        )
+        return render_template(
+            "visualize_angles.html",
+            angle_evolution_plot=angle_evolution_plot,
+            angle_heatmap_plot=angle_heatmap_plot,
+        )
 
     def visualize_fourier(self):
         """Visualize the fourier data."""
-        if self.fourier_series is not None:
-            fourier_magnitude_plot = json.dumps(
-                plot_fourier_magnitude(self.fourier_series), cls=plotly.utils.PlotlyJSONEncoder
-            )
-            fourier_phase_plot = json.dumps(
-                plot_fourier_phase(self.fourier_series), cls=plotly.utils.PlotlyJSONEncoder
-            )
-            return render_template(
-                "visualize_fourier.html",
-                fourier_magnitude_plot=fourier_magnitude_plot,
-                fourier_phase_plot=fourier_phase_plot,
-            )
-        else:
+        if self.fourier_series is None:
             return "Fourier visualization data not available."
+        fourier_magnitude_plot = json.dumps(
+            plot_fourier_magnitude(self.fourier_series), cls=plotly.utils.PlotlyJSONEncoder
+        )
+        fourier_phase_plot = json.dumps(
+            plot_fourier_phase(self.fourier_series), cls=plotly.utils.PlotlyJSONEncoder
+        )
+        return render_template(
+            "visualize_fourier.html",
+            fourier_magnitude_plot=fourier_magnitude_plot,
+            fourier_phase_plot=fourier_phase_plot,
+        )
 
     def generate_frames(self):
         if self.video_processor is None or not self.start_estimation_flag:
