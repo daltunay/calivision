@@ -76,7 +76,7 @@ class PoseEstimationApp:
 
     def visualize_joints(self):
         """Visualize the joint data."""
-        if self.joint_series_plot is None:
+        if self.joint_series is None:
             return "Joint series plot data not available."
 
         joint_series_plot = json.dumps(
