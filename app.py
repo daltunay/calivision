@@ -148,15 +148,15 @@ def index():
             )
 
     if app_instance.start_estimation_flag:
-        start_button_text = "End" if app_instance.pose_estimation_active else "Start"
+        action_button_text = "End" if app_instance.pose_estimation_active else "Start"
         process_button_disabled = "disabled" if app_instance.pose_estimation_active else ""
     else:
-        start_button_text = "Start"
+        action_button_text = "Start"
         process_button_disabled = "" if app_instance.pose_estimation_active else "disabled"
 
     return render_template(
         "index.html",
-        start_button_text=start_button_text,
+        action_button_text=action_button_text,
         process_button_disabled=process_button_disabled,
     )
 
