@@ -69,6 +69,12 @@
             transition: background-color 0.3s ease;
         }
 
+        .btn-disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+
         .btn:hover {
             background-color: #0056b3;
         }
@@ -87,6 +93,7 @@
     <div class="container">
         <h1>Body Pose Estimation</h1>
 
+        <!-- Form for starting and terminating pose estimation -->
         <form method="POST">
             <div class="parameter">
                 <label for="min_detection_confidence">Min Detection Confidence:</label>
@@ -112,26 +119,26 @@
             </div>
 
             <div class="button-container">
-                <input class="btn" type="submit" value="Start Pose Estimation">
+                <input class="btn" type="submit" value="{{ start_button_text }}" id="startButton">
             </div>
         </form>
 
-        <form method="POST" action="/terminate">
-            <div class="button-container">
-                <input class="btn" type="submit" value="Terminate Pose Estimation">
-            </div>
-        </form>
-
+        <!-- Form for processing data -->
         <form method="GET" action="/process_data">
             <div class="button-container">
-                <input class="btn" type="submit" value="Process Data">
+                <input class="btn{{ ' btn-disabled' if process_button_disabled else '' }}" type="submit"
+                    value="Process Data" {{ process_button_disabled }}
+                    onclick="return enableProcessData('{{ process_button_disabled }}');">
             </div>
         </form>
 
+
+        <!-- Display the video feed -->
         <img src="{{ url_for('video_feed') }}" alt="Video Feed">
 
     </div>
 
+    <!-- JavaScript for updating displayed values and button text -->
     <script>
         function updateMinDetectionConfidence(value) {
             document.getElementById("min_detection_value").textContent = value;
@@ -140,6 +147,26 @@
         function updateMinTrackingConfidence(value) {
             document.getElementById("min_tracking_value").textContent = value;
         }
+
+        // Toggle button text immediately upon clicking
+        const startButton = document.getElementById("startButton");
+        startButton.addEventListener("click", function () {
+            if (startButton.value === "Start Pose Estimation") {
+                startButton.value = "Terminate Pose Estimation";
+            } else {
+                startButton.value = "Start Pose Estimation";
+            }
+        });
+
+        function enableProcessData(process_button_disabled) {
+            // Check if the button is disabled
+            if (process_button_disabled.trim() === "btn-disabled") {
+                return false;  // Prevent form submission
+            } else {
+                return true;  // Allow form submission
+            }
+        }
+
     </script>
 </body>
 

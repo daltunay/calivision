@@ -31,6 +31,7 @@ class PoseEstimationApp:
         self.joint_series = None
         self.angle_series = None
         self.fourier_series = None
+        self.pose_estimation_active = False
 
     def start_estimation(
         self, min_detection_confidence, min_tracking_confidence, model_complexity
@@ -47,6 +48,7 @@ class PoseEstimationApp:
         )
         self.video_processor = VideoProcessor(self.pose_estimator, webcam=0, flask=True)
         self.start_estimation_flag = True
+        self.pose_estimation_active = True
 
     def terminate_estimation(self):
         """Terminate the pose estimation process."""
@@ -59,6 +61,7 @@ class PoseEstimationApp:
             )
         self.video_processor = None
         self.start_estimation_flag = False
+        self.pose_estimation_active = False
 
     def process_data(self):
         """Process data series to compute joint, angle, and Fourier series data."""
@@ -133,18 +136,30 @@ app_instance = PoseEstimationApp()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    """Homepage route that handles user input for starting pose estimation."""
-
     if request.method == "POST":
-        min_detection_confidence = float(request.form["min_detection_confidence"])
-        min_tracking_confidence = float(request.form["min_tracking_confidence"])
-        model_complexity = int(request.form["model_complexity"])
+        if app_instance.start_estimation_flag:
+            app_instance.terminate_estimation()
+        else:
+            min_detection_confidence = float(request.form["min_detection_confidence"])
+            min_tracking_confidence = float(request.form["min_tracking_confidence"])
+            model_complexity = int(request.form["model_complexity"])
 
-        app_instance.start_estimation(
-            min_detection_confidence, min_tracking_confidence, model_complexity
-        )
+            app_instance.start_estimation(
+                min_detection_confidence, min_tracking_confidence, model_complexity
+            )
 
-    return render_template("index.html")
+    if app_instance.start_estimation_flag:
+        start_button_text = "Terminate Pose Estimation"
+        process_button_disabled = "disabled" if app_instance.pose_estimation_active else ""
+    else:
+        start_button_text = "Start Pose Estimation"
+        process_button_disabled = ""
+
+    return render_template(
+        "index.html",
+        start_button_text=start_button_text,
+        process_button_disabled=process_button_disabled,
+    )
 
 
 @app.route("/terminate", methods=["POST"])
