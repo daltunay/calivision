@@ -141,7 +141,8 @@ class VideoProcessor:
             success, frame = self.cap.read()  # Read next frame
 
         # Cleanup
-        self._terminate()
+        if not self.flask:
+            self._terminate()
         return None
 
     def _initialize_progress_bar(self):
@@ -166,7 +167,6 @@ class VideoProcessor:
         logging.info(
             f"Body pose estimation completed ({self.frame_count} frames, {self.frame_count / self.fps:.2f}s)."
         )
-        return None
 
     @staticmethod
     def _show_landmarks(
