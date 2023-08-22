@@ -94,7 +94,7 @@
         <h1>Body Pose Estimation</h1>
 
         <!-- Form for starting and terminating pose estimation -->
-        <form method="POST">
+        <form method="POST" onsubmit="resetStartButton()">
             <div class="parameter">
                 <label for="min_detection_confidence">Min Detection Confidence:</label>
                 <input class="slider" type="range" id="min_detection_confidence" name="min_detection_confidence" min="0"
@@ -132,7 +132,6 @@
             </div>
         </form>
 
-
         <!-- Display the video feed -->
         <img src="{{ url_for('video_feed') }}" alt="Video Feed">
 
@@ -151,20 +150,24 @@
         // Toggle button text immediately upon clicking
         const startButton = document.getElementById("startButton");
         startButton.addEventListener("click", function () {
-            if (startButton.value === "Start Pose Estimation") {
-                startButton.value = "Terminate Pose Estimation";
+            if (startButton.value === "Start") {
+                startButton.value = "End";
             } else {
-                startButton.value = "Start Pose Estimation";
+                startButton.value = "Start";
             }
         });
 
         function enableProcessData(process_button_disabled) {
-            // Check if the button is disabled
             if (process_button_disabled.trim() === "btn-disabled") {
                 return false;  // Prevent form submission
             } else {
                 return true;  // Allow form submission
             }
+        }
+
+        // Function to reset button text to "Start" when starting the pose estimation
+        function resetStartButton() {
+            startButton.value = "Start";
         }
 
     </script>

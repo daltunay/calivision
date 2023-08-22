@@ -148,10 +148,10 @@ def index():
             )
 
     if app_instance.start_estimation_flag:
-        start_button_text = "Terminate Pose Estimation"
+        start_button_text = "End" if app_instance.pose_estimation_active else "Start"
         process_button_disabled = "disabled" if app_instance.pose_estimation_active else ""
     else:
-        start_button_text = "Start Pose Estimation"
+        start_button_text = "Start"
         process_button_disabled = "" if app_instance.pose_estimation_active else "disabled"
 
     return render_template(
