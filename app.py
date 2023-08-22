@@ -74,7 +74,7 @@ class PoseEstimationApp:
         self.angle_series = AngleSeries(joint_series=self.joint_series)
         self.angle_series.smooth(smooth_fraction=0.1, inplace=True)
 
-        self.fourier_series = FourierSeries(angle_series=self.angle_series)
+        self.fourier_series = FourierSeries(angle_series=self.angle_series, dc_offset=True)
 
     def visualize_joints(self):
         """Visualize the joint data."""

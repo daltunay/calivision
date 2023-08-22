@@ -16,14 +16,16 @@ logging.basicConfig(
 class FourierSeries(pd.DataFrame):
     """Class for calculating the Fourier transform of angle time series."""
 
-    def __init__(self, angle_series: AngleSeries):
+    def __init__(self, angle_series: AngleSeries, dc_offset: bool = False):
         """Initialize FourierSeries with the provided AngleSeries.
 
         Args:
             angle_series (AngleSeries): A series of joint angles.
+            dc_offset (bool): Whether to subtract the DC value from the signals or not.
         """
         super().__init__()
         self.__dict__["_angle_series"]: AngleSeries = angle_series
+        self.__dict__["_dc_offset"]: AngleSeries = dc_offset
         self.__dict__["magnitude"]: pd.DataFrame = pd.DataFrame()
         self.__dict__["phase"]: pd.DataFrame = pd.DataFrame()
         self._fourier_transform()
@@ -32,6 +34,9 @@ class FourierSeries(pd.DataFrame):
         """Calculate the Fourier transform of angle time series and update self DataFrame."""
         logging.info("Computing Fourier transform of angle time series")
         angle_data = self._angle_series.to_numpy()
+        if self._dc_offset:
+            self._dc_offset = angle_data.mean(axis=0)
+            angle_data -= self._dc_offset
         freqs = np.fft.fftfreq(len(angle_data), d=1.0)
         transformed_data = np.fft.fft(angle_data, axis=0)
 

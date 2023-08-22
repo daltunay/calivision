@@ -48,10 +48,10 @@ def plot_fourier_magnitude(fourier_frame):
         height=720,
         title="Fourier Frequency Domain : Magnitude",
         xaxis_title="Frequency (s⁻¹)",
-        yaxis_title="Magnitude",
+        yaxis_title="Magnitude (°)",
         legend_title="Body Angles",
         hovermode="closest",
-        xaxis_range=[-0.02, 0.02],
+        # xaxis_range=[-0.02, 0.02],
     )
 
     return fig
@@ -93,10 +93,10 @@ def plot_fourier_phase(fourier_frame):
         height=720,
         title="Fourier Frequency Domain : Phase",
         xaxis_title="Frequency (s⁻¹)",
-        yaxis_title="Phase",
+        yaxis_title="Phase (°)",
         legend_title="Body Angles",
         hovermode="closest",
-        xaxis_range=[-0.02, 0.02],
+        # xaxis_range=[-0.02, 0.02],
     )
 
     return fig
