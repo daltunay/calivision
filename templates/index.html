@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Body Pose Estimation</title>
     <style>
         body {
@@ -12,7 +14,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -22,17 +24,25 @@
             margin-bottom: 20px;
         }
 
-        form {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        a {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        a:hover {
+            background-color: #0056b3;
         }
 
         .parameter {
             flex-basis: calc(33.33% - 20px);
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .slider {
@@ -42,6 +52,25 @@
         .button-container {
             text-align: center;
             width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
         }
 
         img {
@@ -49,6 +78,7 @@
             height: auto;
             display: block;
             margin: 0 auto;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -82,23 +112,24 @@
             </div>
 
             <div class="button-container">
-                <input type="submit" value="Start Pose Estimation">
+                <input class="btn" type="submit" value="Start Pose Estimation">
             </div>
         </form>
-
-        <img src="{{ url_for('video_feed') }}" alt="Video Feed" style="width: 100%; height: auto;">
 
         <form method="POST" action="/terminate">
             <div class="button-container">
-                <input type="submit" value="Terminate Pose Estimation">
+                <input class="btn" type="submit" value="Terminate Pose Estimation">
             </div>
         </form>
 
-        <form method="GET" action="/process_data_series">
+        <form method="GET" action="/process_data">
             <div class="button-container">
-                <input type="submit" value="Process Data Series">
+                <input class="btn" type="submit" value="Process Data">
             </div>
         </form>
+
+        <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+
     </div>
 
     <script>

@@ -60,7 +60,7 @@ class PoseEstimationApp:
         self.video_processor = None
         self.start_estimation_flag = False
 
-    def process_data_series(self):
+    def process_data(self):
         """Process data series to compute joint, angle, and Fourier series data."""
 
         if self.landmarks_series is None:
@@ -155,12 +155,12 @@ def terminate():
     return redirect(url_for("index"))
 
 
-@app.route("/process_data_series", methods=["GET"])
-def process_data_series():
-    """Route to process data series and render data processing template."""
+@app.route("/process_data", methods=["GET"])
+def process_data():
+    """Route to process data and render data processing template."""
 
-    app_instance.process_data_series()
-    return render_template("process_data_series.html")
+    app_instance.process_data()
+    return render_template("process_data.html")
 
 
 @app.route("/visualize_joints")
