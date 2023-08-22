@@ -60,7 +60,6 @@ class PoseEstimationApp:
                 self.video_processor.fps,
             )
         self.video_processor = None
-        self.start_estimation_flag = False
         self.pose_estimation_active = False
 
     def process_data(self):
@@ -153,7 +152,7 @@ def index():
         process_button_disabled = "disabled" if app_instance.pose_estimation_active else ""
     else:
         start_button_text = "Start Pose Estimation"
-        process_button_disabled = ""
+        process_button_disabled = "" if app_instance.pose_estimation_active else "disabled"
 
     return render_template(
         "index.html",
