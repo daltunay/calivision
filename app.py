@@ -1,8 +1,7 @@
 import json
-
 import cv2
 import plotly
-from flask import Flask, Response, redirect, render_template, request, send_file, url_for
+from flask import Flask, Response, redirect, render_template, request, url_for
 
 from src.features import AngleSeries, FourierSeries, JointSeries
 from src.video_processing.process_video import PoseEstimator, VideoProcessor
@@ -16,161 +15,134 @@ from src.visualization import (
 
 app = Flask(__name__)
 
-# Global variables
-pose_estimator = None
-video_processor = None
-start_estimation = False
-landmarks_series = None
-fps = None
-joint_series = None
-angle_series = None
-fourier_series = None
+class PoseEstimationApp:
+    def __init__(self):
+        self.pose_estimator = None
+        self.video_processor = None
+        self.start_estimation_flag = False
+        self.landmarks_series = None
+        self.fps = None
+        self.joint_series = None
+        self.angle_series = None
+        self.fourier_series = None
 
-# Section: Routes for Pose Estimation and Data Processing
+    def start_estimation(self, min_detection_confidence, min_tracking_confidence, model_complexity):
+        self.pose_estimator = PoseEstimator(
+            model_complexity, min_detection_confidence, min_tracking_confidence
+        )
+        self.video_processor = VideoProcessor(self.pose_estimator, webcam=0, flask=True)
+        self.start_estimation_flag = True
 
+    def terminate_estimation(self):
+        if self.video_processor is not None:
+            self.video_processor._terminate()
+            self.landmarks_series, self.fps = (
+                self.video_processor.normalized_world_landmarks_series,
+                self.video_processor.fps,
+            )
+        self.video_processor = None
+        self.start_estimation_flag = False
+
+    def process_data_series(self):
+        if self.landmarks_series is not None:
+            self.joint_series = JointSeries(landmarks_series=self.landmarks_series, fps=self.fps)
+            self.joint_series.smooth(smooth_fraction=0.1, inplace=True)
+            self.joint_series_plot = json.dumps(
+                plot_joint_series(self.joint_series, visibility_threshold=0.5),
+                cls=plotly.utils.PlotlyJSONEncoder,
+            )
+
+            self.angle_series = AngleSeries(joint_series=self.joint_series)
+            self.angle_series.smooth(smooth_fraction=0.1, inplace=True)
+
+            self.fourier_series = FourierSeries(angle_series=self.angle_series)
+
+    def visualize_joints(self):
+        if self.joint_series_plot is not None:
+            return render_template("visualize_joints.html", joint_series_plot=self.joint_series_plot)
+        else:
+            return "Joint series plot data not available."
+
+    def visualize_angles(self):
+        if self.angle_series is not None:
+            angle_evolution_plot = json.dumps(
+                plot_angle_evolution(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
+            )
+            angle_heatmap_plot = json.dumps(
+                plot_angle_heatmap(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
+            )
+            return render_template(
+                "visualize_angles.html",
+                angle_evolution_plot=angle_evolution_plot,
+                angle_heatmap_plot=angle_heatmap_plot,
+            )
+        else:
+            return "Angle visualization data not available."
+
+    def visualize_fourier(self):
+        if self.fourier_series is not None:
+            fourier_magnitude_plot = json.dumps(
+                plot_fourier_magnitude(self.fourier_series), cls=plotly.utils.PlotlyJSONEncoder
+            )
+            fourier_phase_plot = json.dumps(
+                plot_fourier_phase(self.fourier_series), cls=plotly.utils.PlotlyJSONEncoder
+            )
+            return render_template(
+                "visualize_fourier.html",
+                fourier_magnitude_plot=fourier_magnitude_plot,
+                fourier_phase_plot=fourier_phase_plot,
+            )
+        else:
+            return "Fourier visualization data not available."
+
+    def generate_frames(self):
+        if self.video_processor is None or not self.start_estimation_flag:
+            return
+
+        for annotated_frame in self.video_processor.process_video(show=True):
+            ret, buffer = cv2.imencode(".jpg", annotated_frame)
+            if not ret:
+                break
+            yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n")
+
+app_instance = PoseEstimationApp()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    global pose_estimator, video_processor, start_estimation
-
     if request.method == "POST":
-        # Get user input for PoseEstimator
         min_detection_confidence = float(request.form["min_detection_confidence"])
         min_tracking_confidence = float(request.form["min_tracking_confidence"])
-
-        # Get user input for VideoProcessor
         model_complexity = int(request.form["model_complexity"])
-
-        # Initialize PoseEstimator and VideoProcessor
-        pose_estimator = PoseEstimator(
-            model_complexity, min_detection_confidence, min_tracking_confidence
-        )
-        video_processor = VideoProcessor(pose_estimator, webcam=0, flask=True)
-
-        # Start pose estimation
-        start_estimation = True
+        
+        app_instance.start_estimation(min_detection_confidence, min_tracking_confidence, model_complexity)
 
     return render_template("index.html")
 
-
 @app.route("/terminate", methods=["POST"])
 def terminate():
-    global video_processor, start_estimation, landmarks_series, fps
-
-    if video_processor is not None:
-        video_processor._terminate()
-        landmarks_series, fps = (
-            video_processor.normalized_world_landmarks_series,
-            video_processor.fps,
-        )
-    video_processor = None
-    start_estimation = False
-
+    app_instance.terminate_estimation()
     return redirect(url_for("index"))
-
-
-@app.route("/visualize_joints")
-def visualize_joints():
-    global joint_series_plot
-
-    if joint_series_plot is not None:
-        return render_template("visualize_joints.html", joint_series_plot=joint_series_plot)
-    else:
-        return "Joint series plot data not available."
-
-
-@app.route("/visualize_angles")
-def visualize_angles():
-    global angle_evolution_plot, angle_heatmap_plot
-
-    if angle_evolution_plot is not None and angle_heatmap_plot is not None:
-        return render_template(
-            "visualize_angles.html",
-            angle_evolution_plot=angle_evolution_plot,
-            angle_heatmap_plot=angle_heatmap_plot,
-        )
-    else:
-        return "Angle visualization data not available."
-
-
-@app.route("/visualize_fourier")
-def show_visualize_fourier():
-    global fourier_magnitude_plot, fourier_phase_plot
-
-    if fourier_magnitude_plot is not None and fourier_phase_plot is not None:
-        return render_template(
-            "visualize_fourier.html",
-            fourier_magnitude_plot=fourier_magnitude_plot,
-            fourier_phase_plot=fourier_phase_plot,
-        )
-    else:
-        return "Fourier visualization data not available."
-
 
 @app.route("/process_data_series", methods=["GET"])
 def process_data_series():
-    global landmarks_series, fps, joint_series, joint_series_plot, angle_series, angle_evolution_plot, angle_heatmap_plot, fourier_series, fourier_magnitude_plot, fourier_phase_plot
+    app_instance.process_data_series()
+    return render_template("process_data_series.html")
 
-    if landmarks_series is not None:
-        # Process the data and generate Plotly figures
-        joint_series = JointSeries(landmarks_series=landmarks_series, fps=fps)
-        joint_series.smooth(smooth_fraction=0.1, inplace=True)
-        joint_series_plot = json.dumps(
-            plot_joint_series(joint_series, visibility_threshold=0.5),
-            cls=plotly.utils.PlotlyJSONEncoder,
-        )
+@app.route("/visualize_joints")
+def visualize_joints():
+    return app_instance.visualize_joints()
 
-        angle_series = AngleSeries(joint_series=joint_series)
-        angle_series.smooth(smooth_fraction=0.1, inplace=True)
-        angle_evolution_plot = json.dumps(
-            plot_angle_evolution(angle_series), cls=plotly.utils.PlotlyJSONEncoder
-        )
-        angle_heatmap_plot = json.dumps(
-            plot_angle_heatmap(angle_series), cls=plotly.utils.PlotlyJSONEncoder
-        )
+@app.route("/visualize_angles")
+def visualize_angles():
+    return app_instance.visualize_angles()
 
-        fourier_series = FourierSeries(angle_series=angle_series)
-        fourier_magnitude_plot = json.dumps(
-            plot_fourier_magnitude(fourier_series), cls=plotly.utils.PlotlyJSONEncoder
-        )
-        fourier_phase_plot = json.dumps(
-            plot_fourier_phase(fourier_series), cls=plotly.utils.PlotlyJSONEncoder
-        )
-
-        return render_template(
-            "explore_processed_data.html",
-            joint_series_plot=joint_series_plot,
-            angle_evolution_plot=angle_evolution_plot,
-            angle_heatmap_plot=angle_heatmap_plot,
-            fourier_magnitude_plot=fourier_magnitude_plot,
-            fourier_phase_plot=fourier_phase_plot,
-        )
-    else:
-        return "Landmarks series data not available."
-
-
-@app.route("/explore_processed_data", methods=["GET"])
-def explore_processed_data():
-    return render_template("explore_processed_data.html")
-
-
-def generate_frames():
-    global video_processor, start_estimation
-
-    if video_processor is None or not start_estimation:
-        return
-
-    for annotated_frame in video_processor.process_video(show=True):
-        ret, buffer = cv2.imencode(".jpg", annotated_frame)
-        if not ret:
-            break
-        yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n")
-
+@app.route("/visualize_fourier")
+def visualize_fourier():
+    return app_instance.visualize_fourier()
 
 @app.route("/video_feed")
 def video_feed():
-    return Response(generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
-
+    return Response(app_instance.generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
 if __name__ == "__main__":
     app.run(debug=True)

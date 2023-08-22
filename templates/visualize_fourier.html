@@ -11,7 +11,7 @@
 <body>
     <div id="fourier-magnitude-plot"></div>
     <div id="fourier-phase-plot"></div>
-    <a href="{{ url_for('explore_processed_data') }}">Back to Explore Processed Data</a>
+    <a href="{{ url_for('process_data_series') }}">Back to Explore Processed Data</a>
     <a href="{{ url_for('index') }}">Back to Index</a>
     <script>
         const fourierMagnitudeData = {{ fourier_magnitude_plot| safe }};
