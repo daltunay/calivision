@@ -10,47 +10,47 @@
 </head>
 
 <body>
-        <h1 class="page-title">CaliVision: Body Pose Estimation</h1>
+    <h1 class="page-title">CaliVision: Body Pose Estimation</h1>
 
-        <div class="content-container">
+    <div class="content-container">
 
         <!-- Form for starting and terminating pose estimation -->
         <form method="POST" onsubmit="resetActionButton()">
             <div class="parameter-section">
-                <label for="min_detection_confidence">min_detection_confidence:</label>
+                <label for="min_detection_confidence"><code>min_detection_confidence:</code></label>
                 <input class="slider" type="range" id="min_detection_confidence" name="min_detection_confidence" min="0"
                     max="1" step="0.1" value="0.5" onchange="updateMinDetectionConfidence(this.value)">
-                <span id="min_detection_value">0.5</span>
+                <span id="min_detection_value"><code>0.5</code></span>
             </div>
 
             <div class="parameter-section">
-                <label for="min_tracking_confidence">min_tracking_confidence:</label>
+                <label for="min_tracking_confidence"><code>min_tracking_confidence:</code></label>
                 <input class="slider" type="range" id="min_tracking_confidence" name="min_tracking_confidence" min="0"
                     max="1" step="0.1" value="0.5" onchange="updateMinTrackingConfidence(this.value)">
-                <span id="min_tracking_value">0.5</span>
+                <span id="min_tracking_value"><code>0.5</code></span>
             </div>
 
             <div class="parameter-section">
-                <label for="model_complexity">model_complexity:</label>
+                <label for="model_complexity"><code>model_complexity:</code></label>
                 <select id="model_complexity" name="model_complexity">
-                    <option value="0">0</option>
-                    <option value="1" selected>1</option>
-                    <option value="2">2</option>
+                    <option value="0"><code>0</code></option>
+                    <option value="1" selected><code>1</code></option>
+                    <option value="2"><code>2</code></option>
                 </select>
             </div>
+    </div>
 
-            <div class="vertical-button-group">
-                <input class="button" type="submit" value="{{ action_button_text }}" id="actionButton">
-            </div>
-        </form>
+    <div class="content-container">
+        <div class="vertical-button-group">
+            <input class="button" type="submit" value="{{ action_button_text }}" id="actionButton">
+            </form>
 
-        <!-- Form for processing data -->
-        <form method="GET" action="/process_data">
-            <div class="vertical-button-group">
+            <!-- Form for processing data -->
+            <form method="GET" action="/process_data">
                 <input class="button{{ ' button-disabled' if process_button_disabled else '' }}" type="submit"
                     value="Process Data" {{ process_button_disabled }}
                     onclick="return enableProcessData('{{ process_button_disabled }}');">
-            </div>
+        </div>
         </form>
 
     </div>
@@ -63,11 +63,11 @@
     <!-- JavaScript for updating displayed values and button text -->
     <script>
         function updateMinDetectionConfidence(value) {
-            document.getElementById("min_detection_value").textContent = value;
+            document.getElementById("min_detection_value").innerHTML = "<code>" + value + "</code>";
         }
 
         function updateMinTrackingConfidence(value) {
-            document.getElementById("min_tracking_value").textContent = value;
+            document.getElementById("min_tracking_value").innerHTML = "<code>" + value + "</code>";
         }
 
     </script>

@@ -16,6 +16,7 @@ body {
 
 /* Main Content Container */
 .content-container {
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -96,7 +97,7 @@ body {
 }
 
 .button-disabled:hover {
-    background-color: #ceb2b2;
+    background-color: #c9bcbc;
 }
 
 /* Video Feed Container */
@@ -161,4 +162,10 @@ body {
     color: #333;
     font-size: 16px;
     line-height: 1.5;
+}
+
+code {
+    font-family: monospace; /* Use a monospaced font */
+    padding: auto auto;
+    font-size: 14px;
 }
