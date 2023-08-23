@@ -31,6 +31,7 @@ class PoseEstimationApp:
         self.angle_series = None
         self.fourier_series = None
         self.pose_estimation_active = False
+        self.visibility_threshold = None
 
     def start_estimation(
         self, min_detection_confidence, min_tracking_confidence, model_complexity
@@ -47,6 +48,7 @@ class PoseEstimationApp:
             self.pose_estimator = PoseEstimator(
                 model_complexity, min_detection_confidence, min_tracking_confidence
             )
+            self.visibility_threshold = min_detection_confidence
             self.video_processor = VideoProcessor(self.pose_estimator, webcam=0, flask=True)
             self.start_estimation_flag = True
             self.pose_estimation_active = True
@@ -95,7 +97,9 @@ class PoseEstimationApp:
             return "Joint data not available."
 
         joint_series_plot = json.dumps(
-            plot_joint_series(self.joint_series, visibility_threshold=0.5),
+            plot_joint_series(
+                self.joint_series, visibility_threshold=self.visibility_threshold
+            ),
             cls=plotly.utils.PlotlyJSONEncoder,
         )
         return render_template("visualize_joints.html", joint_series_plot=joint_series_plot)
@@ -105,10 +109,16 @@ class PoseEstimationApp:
         if self.angle_series is None:
             return "Angle data not available."
         angle_evolution_plot = json.dumps(
-            plot_angle_evolution(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
+            plot_angle_evolution(
+                self.angle_series, visibility_threshold=self.visibility_threshold
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder,
         )
         angle_heatmap_plot = json.dumps(
-            plot_angle_heatmap(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
+            plot_angle_heatmap(
+                self.angle_series, visibility_threshold=self.visibility_threshold
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder,
         )
         return render_template(
             "visualize_angles.html",

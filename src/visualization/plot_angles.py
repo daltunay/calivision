@@ -1,5 +1,4 @@
 import logging
-from typing import Tuple
 
 import plotly.graph_objects as go
 
@@ -14,17 +13,43 @@ logging.basicConfig(
 )
 
 
-def plot_angle_evolution(angle_frame: AngleSeries) -> go.Figure:
+def visible_angles_only(angle_frame, visibility_threshold):
+    visibility_frame = (
+        angle_frame._joint_series.loc[:, (slice(None), "visibility")]
+        .droplevel(level=1, axis=1)
+        .applymap(lambda visibility: visibility > visibility_threshold)
+    )
+
+    # Remove angles with non-visible joints
+    for timestamp in angle_frame.index:
+        for col in angle_frame.columns:
+            first_joint, mid_joint, end_joint = col  # Extract the joint keys from the column
+
+            # Check if any of the joints involved have False visibility at the timestamp
+            if (
+                not visibility_frame.loc[timestamp, first_joint]
+                or not visibility_frame.loc[timestamp, mid_joint]
+                or not visibility_frame.loc[timestamp, end_joint]
+            ):
+                # Set the angle value to NaN for this timestamp and column
+                angle_frame.loc[timestamp, col] = None
+    return angle_frame
+
+
+def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float = 0.5) -> go.Figure:
     """Plot the evolution of body angles over time using an interactive 2D line plot.
 
     Args:
         angle_frame (AngleSeries): Multi-column DataFrame of angles to plot. Each column represents a combination of joint angles.
+        visibility_threshold (float): Threshold to determine which joints are considered visible or not.
 
     Returns:
         go.Figure: An interactive 2D line plot displaying the angle series.
     """
     logging.info("Plotting angle time series")
     fig = go.Figure()
+
+    angle_frame = visible_angles_only(angle_frame, visibility_threshold)
 
     # Add traces for each angle combination
     for column in angle_frame.columns:
@@ -64,11 +89,12 @@ def plot_angle_evolution(angle_frame: AngleSeries) -> go.Figure:
     return fig
 
 
-def plot_angle_heatmap(angle_frame: AngleSeries) -> go.Figure:
+def plot_angle_heatmap(angle_frame: AngleSeries, visibility_threshold: float = 0.5) -> go.Figure:
     """Plot a heatmap of body angles over time.
 
     Args:
         angle_frame (AngleSeries): Multi-column DataFrame of angles to plot. Each column represents a combination of joint angles.
+        visibility_threshold (float): Threshold to determine which joints are considered visible or not.
 
     Returns:
         go.Figure: A heatmap displaying the angle series.
@@ -76,6 +102,8 @@ def plot_angle_heatmap(angle_frame: AngleSeries) -> go.Figure:
     logging.info("Plotting angle heatmap")
     # Create a heatmap figure
     fig = go.Figure()
+
+    angle_frame = visible_angles_only(angle_frame, visibility_threshold)
 
     # Convert the column names to a more readable format
     formatted_joint_names = [format_joint_name(column)[1] for column in angle_frame.columns]
