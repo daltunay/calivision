@@ -51,7 +51,6 @@ def plot_fourier_magnitude(fourier_frame):
         yaxis_title="Magnitude (°)",
         legend_title="Body Angles",
         hovermode="closest",
-        # xaxis_range=[-0.02, 0.02],
     )
 
     return fig
@@ -96,7 +95,6 @@ def plot_fourier_phase(fourier_frame):
         yaxis_title="Phase (°)",
         legend_title="Body Angles",
         hovermode="closest",
-        # xaxis_range=[-0.02, 0.02],
     )
 
     return fig

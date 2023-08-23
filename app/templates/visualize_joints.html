@@ -5,13 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joint Series Visualization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
-    <div id="joint-visualization"></div>
-    <a href="{{ url_for('index_routes.process_data') }}">Back to Explore Processed Data</a>
-    <a href="{{ url_for('index_routes.index') }}">Back to Index</a>
+    <h1 class="page-title">Joint Series Visualization</h1>
+
+    <div class="plot-container">
+        <div class="plot-description">
+            <p>This is a 3D interactive plot displaying visible body joints. Use your cursor to move around the body,
+                and use the bottom slider to select your desired timestamp.</p>
+        </div>
+        <div id="joint-visualization" class="plot"></div>
+    </div>
+
+    <div class="back-link-container">
+        <a href="{{ url_for('index_routes.process_data') }}" class="back-link">Back</a>
+        <a href="{{ url_for('index_routes.index') }}" class="back-link">Home</a>
+    </div>
+
     <script>
         const jointData = {{ joint_series_plot| safe }};
         Plotly.newPlot('joint-visualization', jointData);

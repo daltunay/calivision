@@ -37,7 +37,7 @@ class FourierSeries(pd.DataFrame):
         if self._dc_offset:
             self._dc_offset = angle_data.mean(axis=0)
             angle_data -= self._dc_offset
-        freqs = np.fft.fftfreq(len(angle_data), d=1.0)
+        freqs = np.fft.fftfreq(len(angle_data), d=1 / self._angle_series._joint_series.fps)
         transformed_data = np.fft.fft(angle_data, axis=0)
 
         index = pd.MultiIndex.from_tuples(
@@ -47,6 +47,7 @@ class FourierSeries(pd.DataFrame):
         transformed_df = pd.DataFrame(
             data=transformed_data.T, index=index, columns=columns, dtype="complex64"
         ).transpose()
+        transformed_df = transformed_df[transformed_df.index > 0]
 
         self.index = transformed_df.index
         self.index.name = "frequency"

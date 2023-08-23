@@ -24,7 +24,6 @@ def plot_angle_evolution(angle_frame: AngleSeries) -> go.Figure:
         go.Figure: An interactive 2D line plot displaying the angle series.
     """
     logging.info("Plotting angle time series")
-    # Create an empty figure
     fig = go.Figure()
 
     # Add traces for each angle combination

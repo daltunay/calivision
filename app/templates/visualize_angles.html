@@ -5,14 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Angle Visualizations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
-    <div id="angle-evolution-plot"></div>
-    <div id="angle-heatmap-plot"></div>
-    <a href="{{ url_for('index_routes.process_data') }}">Back to Explore Processed Data</a>
-    <a href="{{ url_for('index_routes.index') }}">Back to Index</a>
+    <h1 class="page-title">Explore Processed Data</h1>
+
+    <h2 class="section-title">Angle Evolution</h2>
+    <div class="plot-container">
+        <div class="plot-description">
+            <p>This is a plot of all the angle time series : each line corresponds to a set of 3 joints. These were
+                computed using the 3D joint coordinates.</p>
+        </div>
+        <div id="angle-evolution-plot" class="plot"></div>
+    </div>
+
+    <h2 class="section-title">Angle Heatmap</h2>
+    <div class="plot-container">
+        <div class="plot-description">
+            <p>This is a heatmap of all the angle values over time. The brighter the color, the higher the anglue value.
+            </p>
+        </div>
+        <div id="angle-heatmap-plot" class="plot"></div>
+    </div>
+
+    <div class="back-link-container">
+        <a href="{{ url_for('index_routes.process_data') }}" class="back-link">Back</a>
+        <a href="{{ url_for('index_routes.index') }}" class="back-link">Home</a>
+    </div>
+
     <script>
         const angleEvolutionData = {{ angle_evolution_plot| safe }};
         Plotly.newPlot('angle-evolution-plot', angleEvolutionData);

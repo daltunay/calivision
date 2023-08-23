@@ -5,67 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore Processed Data</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1, h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        a {
-            display: block;
-            padding: 10px;
-            text-align: center;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        a:hover {
-            background-color: #0056b3;
-        }
-
-        .back-link {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
-    <div class="container">
-        <a href="{{ url_for('index_routes.index') }}" class="back-link">Back to Index</a>
-        <h1>Explore Processed Data</h1>
+    <h1 class="page-title">Explore Processed Data</h1>
 
-        <h2>Joint Series Visualization</h2>
-        <div>
-            <a href="{{ url_for('visualization_routes.visualize_joints') }}">View Joint Visualization</a>
+    <div class="content-container">
+
+        <h2 class="section-title">Joint Series Visualization</h2>
+        <div class="button-container">
+            <a href="{{ url_for('data_routes.visualize_joints') }}" class="button">See plot</a>
         </div>
 
-        <h2>Angle Visualizations</h2>
-        <div>
-            <a href="{{ url_for('visualization_routes.visualize_angles') }}">View Angle Visualizations</a>
+        <h2 class="section-title">Angle Visualizations</h2>
+        <div class="button-container">
+            <a href="{{ url_for('data_routes.visualize_angles') }}" class="button">See plots</a>
         </div>
 
-        <h2>Fourier Visualizations</h2>
-        <div>
-            <a href="{{ url_for('visualization_routes.visualize_fourier') }}">View Fourier Visualizations</a>
+        <h2 class="section-title">Fourier Visualizations</h2>
+        <div class="button-container">
+            <a href="{{ url_for('data_routes.visualize_fourier') }}" class="button">See plots</a>
         </div>
+    </div>
+    <div class="back-link-container">
+        <a href="{{ url_for('index_routes.index') }}" class="back-link">Back</a>
     </div>
 </body>
 

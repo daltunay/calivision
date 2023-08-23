@@ -5,14 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fourier Visualizations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
-    <div id="fourier-magnitude-plot"></div>
-    <div id="fourier-phase-plot"></div>
-    <a href="{{ url_for('index_routes.process_data') }}">Back to Explore Processed Data</a>
-    <a href="{{ url_for('index_routes.index') }}">Back to Index</a>
+    <h1 class="page-title">Fourier Visualizations</h1>
+
+    <h2 class="section-title">Magnitude Plot</h2>
+    <div class="plot-container">
+        <div class="plot-description">
+            <p>This is the magnitude spectrum of the Fast Fourier Transform applied to the angle time series. For each angle (set of 3 joints), each time frequency has its magnitude value.</p>
+        </div>
+        <div id="fourier-magnitude-plot" class="plot"></div>
+    </div>
+
+    <h2 class="section-title">Phase Plot</h2>
+    <div class="plot-container">
+        <div class="plot-description">
+            <p>This is the phase spectrum of the Fast Fourier Transform applied to the angle time series. For each angle (set of 3 joints), each time frequency has its phase value.</p>
+        </div>
+        <div id="fourier-phase-plot" class="plot"></div>
+    </div>
+
+    <div class="back-link-container">
+        <a href="{{ url_for('index_routes.process_data') }}" class="back-link">Back</a>
+        <a href="{{ url_for('index_routes.index') }}" class="back-link">Home</a>
+    </div>
+
     <script>
         const fourierMagnitudeData = {{ fourier_magnitude_plot| safe }};
         Plotly.newPlot('fourier-magnitude-plot', fourierMagnitudeData);
