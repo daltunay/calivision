@@ -147,29 +147,6 @@
             document.getElementById("min_tracking_value").textContent = value;
         }
 
-        // Toggle button text immediately upon clicking
-        const actionButton = document.getElementById("actionButton");
-        actionButton.addEventListener("click", function () {
-            if (actionButton.value === "Start") {
-                actionButton.value = "End";
-            } else {
-                actionButton.value = "Start";
-            }
-        });
-
-        function enableProcessData(process_button_disabled) {
-            if (process_button_disabled.trim() === "btn-disabled") {
-                return false;  // Prevent form submission
-            } else {
-                return true;  // Allow form submission
-            }
-        }
-
-        // Function to reset button text to "Start" when starting the pose estimation
-        function resetActionButton() {
-            actionButton.value = "Start";
-        }
-
     </script>
 </body>
 
