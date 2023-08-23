@@ -22,7 +22,6 @@ class PoseEstimationApp:
 
         self.pose_estimator = None
         self.video_processor = None
-        # self.start_estimation_flag = False
         self.landmarks_series = None
         self.fps = None
         self.joint_series = None

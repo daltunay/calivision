@@ -1,9 +1,9 @@
 from flask import Blueprint, Response, current_app, redirect, render_template, request, url_for
 
-main_routes = Blueprint("main_routes", __name__)
+index_routes = Blueprint("index_routes", __name__)
 
 
-@main_routes.route("/", methods=["GET", "POST"])
+@index_routes.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         if current_app.app_instance.pose_estimation_active:
@@ -31,7 +31,7 @@ def index():
     )
 
 
-@main_routes.route("/terminate", methods=["POST"])
+@index_routes.route("/terminate", methods=["POST"])
 def terminate():
     """Route to terminate pose estimation and redirect back to the homepage."""
 
@@ -39,7 +39,7 @@ def terminate():
     return redirect(url_for("index"))
 
 
-@main_routes.route("/process_data", methods=["GET"])
+@index_routes.route("/process_data", methods=["GET"])
 def process_data():
     """Route to process data and render data processing template."""
 
@@ -47,7 +47,7 @@ def process_data():
     return render_template("process_data.html")
 
 
-@main_routes.route("/video_feed")
+@index_routes.route("/video_feed")
 def video_feed():
     """Route to provide video feed with annotated frames."""
 
