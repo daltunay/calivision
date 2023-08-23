@@ -47,6 +47,17 @@ class PoseEstimationApp:
         self.start_estimation_flag = True
         self.pose_estimation_active = True
 
+    def generate_frames(self):
+        """Generates and yields frames during the pose estimation"""
+        if self.video_processor is None or not self.start_estimation_flag:
+            return
+
+        for annotated_frame in self.video_processor.process_video(show=True, width=1000):
+            ret, buffer = cv2.imencode(".jpg", annotated_frame)
+            if not ret:
+                break
+            yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n")
+
     def terminate_estimation(self):
         """Terminate the pose estimation process."""
 
@@ -115,13 +126,3 @@ class PoseEstimationApp:
             fourier_magnitude_plot=fourier_magnitude_plot,
             fourier_phase_plot=fourier_phase_plot,
         )
-
-    def generate_frames(self):
-        if self.video_processor is None or not self.start_estimation_flag:
-            return
-
-        for annotated_frame in self.video_processor.process_video(show=True, width=1000):
-            ret, buffer = cv2.imencode(".jpg", annotated_frame)
-            if not ret:
-                break
-            yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n")
