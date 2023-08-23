@@ -10,33 +10,33 @@
 
 <body>
     <div class="main-container">
-        <h1 class="page-title">Explore Processed Data</h1>
+        <h1 class="page-title">Explore Data</h1>
 
         <div class="content-container">
             <div class="section">
-                <h2 class="section-title">Joint Series Visualization</h2>
+                <h2 class="section-title">Data: extracted joint coordinates</h2>
                 <div class="vertical-button-group">
                     <a href="{{ url_for('data_routes.visualize_joints') }}" class="button">See plot</a>
-                    <a href="{{ url_for('data_routes.export_joints') }}" class="button">Export</a>
+                    <a href="{{ url_for('data_routes.export_joints') }}" class="button">Export coordinates</a>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title">Angle Visualizations</h2>
+                <h2 class="section-title">Data: computed joint angles</h2>
                 <div class="vertical-button-group">
                     <a href="{{ url_for('data_routes.visualize_angles') }}" class="button">See plots</a>
-                    <a href="{{ url_for('data_routes.export_angles') }}" class="button">Export</a>
+                    <a href="{{ url_for('data_routes.export_angles') }}" class="button">Export angles</a>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title">Fourier Visualizations</h2>
+                <h2 class="section-title">Data: angle signals Fourier transform</h2>
                 <div class="vertical-button-group">
                     <a href="{{ url_for('data_routes.visualize_fourier') }}" class="button">See plots</a>
                     <div class="horizontal-button-group">
                         <a href="{{ url_for('data_routes.export_fourier_magnitude') }}" class="button">Export
-                            Magnitude</a>
-                        <a href="{{ url_for('data_routes.export_fourier_phase') }}" class="button">Export Phase</a>
+                            magnitude</a>
+                        <a href="{{ url_for('data_routes.export_fourier_phase') }}" class="button">Export phase</a>
                     </div>
                 </div>
             </div>
