@@ -41,6 +41,7 @@ def export_fourier_magnitude():
     """Route to export Fourier data as Excel."""
     return current_app.app_instance.export_fourier_magnitude()
 
+
 @data_routes.route("/export_fourier_phase")
 def export_fourier_phase():
     """Route to export Fourier data as Excel."""
