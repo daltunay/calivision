@@ -18,10 +18,10 @@ def index():
             )
 
     if current_app.app_instance.pose_estimation_active:
-        action_button_text = "End"
+        action_button_text = "END"
         process_button_disabled = "disabled"
     else:
-        action_button_text = "Start"
+        action_button_text = "START"
         process_button_disabled = (
             "disabled" if current_app.app_instance.landmarks_series is None else ""
         )

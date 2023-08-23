@@ -97,9 +97,7 @@ class PoseEstimationApp:
             return "Joint data not available."
 
         joint_series_plot = json.dumps(
-            plot_joint_series(
-                self.joint_series, visibility_threshold=self.visibility_threshold
-            ),
+            plot_joint_series(self.joint_series, visibility_threshold=self.visibility_threshold),
             cls=plotly.utils.PlotlyJSONEncoder,
         )
         return render_template("visualize_joints.html", joint_series_plot=joint_series_plot)
@@ -115,9 +113,7 @@ class PoseEstimationApp:
             cls=plotly.utils.PlotlyJSONEncoder,
         )
         angle_heatmap_plot = json.dumps(
-            plot_angle_heatmap(
-                self.angle_series, visibility_threshold=self.visibility_threshold
-            ),
+            plot_angle_heatmap(self.angle_series, visibility_threshold=self.visibility_threshold),
             cls=plotly.utils.PlotlyJSONEncoder,
         )
         return render_template(
