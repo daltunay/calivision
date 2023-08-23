@@ -18,12 +18,13 @@ def index():
             )
 
     if current_app.app_instance.pose_estimation_active:
-        action_button_text = "End" if current_app.app_instance.pose_estimation_active else "Start"
+        action_button_text = "End"
+        process_button_disabled = "disabled"
     else:
         action_button_text = "Start"
-    process_button_disabled = (
-        "disabled" if current_app.app_instance.landmarks_series is None else ""
-    )
+        process_button_disabled = (
+            "disabled" if current_app.app_instance.landmarks_series is None else ""
+        )
     return render_template(
         "index.html",
         action_button_text=action_button_text,
