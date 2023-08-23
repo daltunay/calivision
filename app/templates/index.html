@@ -39,14 +39,14 @@
                 </select>
             </div>
 
-            <div class="button-container">
+            <div class="vertical-button-group">
                 <input class="button" type="submit" value="{{ action_button_text }}" id="actionButton">
             </div>
         </form>
 
         <!-- Form for processing data -->
         <form method="GET" action="/process_data">
-            <div class="button-container">
+            <div class="vertical-button-group">
                 <input class="button{{ ' button-disabled' if process_button_disabled else '' }}" type="submit"
                     value="Process Data" {{ process_button_disabled }}
                     onclick="return enableProcessData('{{ process_button_disabled }}');">

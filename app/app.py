@@ -1,7 +1,7 @@
 from flask import Flask
 
 from .pose_estimation import PoseEstimationApp
-from .routes import index_routes, data_routes
+from .routes import data_routes, index_routes
 
 app = Flask(__name__)
 

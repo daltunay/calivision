@@ -9,28 +9,40 @@
 </head>
 
 <body>
-    <h1 class="page-title">Explore Processed Data</h1>
+    <div class="main-container">
+        <h1 class="page-title">Explore Processed Data</h1>
 
-    <div class="content-container">
+        <div class="content-container">
+            <div class="section">
+                <h2 class="section-title">Joint Series Visualization</h2>
+                <div class="vertical-button-group">
+                    <a href="{{ url_for('data_routes.visualize_joints') }}" class="button">See plot</a>
+                    <a href="{{ url_for('data_routes.export_joints') }}" class="button">Export</a>
+                </div>
+            </div>
 
-        <h2 class="section-title">Joint Series Visualization</h2>
-        <div class="button-container">
-            <a href="{{ url_for('data_routes.visualize_joints') }}" class="button">See plot</a>
-        </div>
+            <div class="section">
+                <h2 class="section-title">Angle Visualizations</h2>
+                <div class="vertical-button-group">
+                    <a href="{{ url_for('data_routes.visualize_angles') }}" class="button">See plots</a>
+                    <a href="{{ url_for('data_routes.export_angles') }}" class="button">Export</a>
+                </div>
+            </div>
 
-        <h2 class="section-title">Angle Visualizations</h2>
-        <div class="button-container">
-            <a href="{{ url_for('data_routes.visualize_angles') }}" class="button">See plots</a>
-        </div>
-
-        <h2 class="section-title">Fourier Visualizations</h2>
-        <div class="button-container">
-            <a href="{{ url_for('data_routes.visualize_fourier') }}" class="button">See plots</a>
-        </div>
-    </div>
-    <div class="back-link-container">
-        <a href="{{ url_for('index_routes.index') }}" class="back-link">Back</a>
-    </div>
+            <div class="section">
+                <h2 class="section-title">Fourier Visualizations</h2>
+                <div class="vertical-button-group">
+                    <a href="{{ url_for('data_routes.visualize_fourier') }}" class="button">See plots</a>
+                    <div class="horizontal-button-group">
+                        <a href="{{ url_for('data_routes.export_fourier_magnitude') }}" class="button">Export
+                            Magnitude</a>
+                        <a href="{{ url_for('data_routes.export_fourier_phase') }}" class="button">Export Phase</a>
+                    </div>
+                </div>
+            </div>
+            <div class="back-link-container">
+                <a href="{{ url_for('index_routes.index') }}" class="back-link">Back</a>
+            </div>
 </body>
 
 </html>

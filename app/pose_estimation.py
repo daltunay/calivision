@@ -1,8 +1,11 @@
 import json
+import logging
+from io import BytesIO
 
 import cv2
 import plotly
-from flask import render_template
+from flask import Response, render_template
+
 from src.features import AngleSeries, FourierSeries, JointSeries
 from src.video_processing.process_video import PoseEstimator, VideoProcessor
 from src.visualization import (
@@ -40,7 +43,7 @@ class PoseEstimationApp:
             model_complexity (int): Model complexity level.
         """
         if not self.pose_estimation_active:
-            self.joint_series = None  # reset current data
+            self.joint_series = None  # reset current data
             self.pose_estimator = PoseEstimator(
                 model_complexity, min_detection_confidence, min_tracking_confidence
             )
@@ -89,7 +92,7 @@ class PoseEstimationApp:
     def visualize_joints(self):
         """Visualize the joint data."""
         if self.joint_series is None:
-            return "Joint series plot data not available."
+            return "Joint data not available."
 
         joint_series_plot = json.dumps(
             plot_joint_series(self.joint_series, visibility_threshold=0.5),
@@ -100,7 +103,7 @@ class PoseEstimationApp:
     def visualize_angles(self):
         """Visualize the angle data."""
         if self.angle_series is None:
-            return "Angle visualization data not available."
+            return "Angle data not available."
         angle_evolution_plot = json.dumps(
             plot_angle_evolution(self.angle_series), cls=plotly.utils.PlotlyJSONEncoder
         )
@@ -116,7 +119,7 @@ class PoseEstimationApp:
     def visualize_fourier(self):
         """Visualize the fourier data."""
         if self.fourier_series is None:
-            return "Fourier visualization data not available."
+            return "Fourier data not available."
         fourier_magnitude_plot = json.dumps(
             plot_fourier_magnitude(self.fourier_series), cls=plotly.utils.PlotlyJSONEncoder
         )
@@ -128,3 +131,71 @@ class PoseEstimationApp:
             fourier_magnitude_plot=fourier_magnitude_plot,
             fourier_phase_plot=fourier_phase_plot,
         )
+
+    def export_joints(self):
+        """Function to export joint data as Excel."""
+        if self.joint_series is None:
+            return "Joint data not available."
+
+        excel_stream = BytesIO()
+        self.joint_series.to_excel(index=True, excel_writer=excel_stream, engine="xlsxwriter")
+
+        response = Response(
+            excel_stream.getvalue(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-disposition": "attachment; filename=joints_data.xlsx"},
+        )
+
+        return response
+
+    def export_angles(self):
+        """Function to export angle data as Excel."""
+        if self.angle_series is None:
+            return "Angle data not available."
+
+        excel_stream = BytesIO()
+        self.angle_series.to_excel(index=True, excel_writer=excel_stream, engine="xlsxwriter")
+
+        response = Response(
+            excel_stream.getvalue(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-disposition": "attachment; filename=angles_data.xlsx"},
+        )
+
+        return response
+
+    def export_fourier_magnitude(self):
+        """Function to export fourier magnitude data as Excel."""
+        if self.fourier_series is None:
+            return "Fourier data not available."
+
+        excel_stream = BytesIO()
+        self.fourier_series.magnitude.to_excel(
+            index=True, excel_writer=excel_stream, engine="xlsxwriter"
+        )
+
+        response = Response(
+            excel_stream.getvalue(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-disposition": "attachment; filename=fourier_magnitude_data.xlsx"},
+        )
+
+        return response
+
+    def export_fourier_phase(self):
+        """Function to export fourier phase data as Excel."""
+        if self.fourier_series is None:
+            return "Fourier data not available."
+
+        excel_stream = BytesIO()
+        self.fourier_series.phase.to_excel(
+            index=True, excel_writer=excel_stream, engine="xlsxwriter"
+        )
+
+        response = Response(
+            excel_stream.getvalue(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-disposition": "attachment; filename=fourier_phase_data.xlsx"},
+        )
+
+        return response
