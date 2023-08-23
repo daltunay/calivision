@@ -22,7 +22,7 @@ class PoseEstimationApp:
 
         self.pose_estimator = None
         self.video_processor = None
-        self.start_estimation_flag = False
+        # self.start_estimation_flag = False
         self.landmarks_series = None
         self.fps = None
         self.joint_series = None
@@ -40,16 +40,17 @@ class PoseEstimationApp:
             min_tracking_confidence (float): Minimum tracking confidence threshold.
             model_complexity (int): Model complexity level.
         """
-        self.pose_estimator = PoseEstimator(
-            model_complexity, min_detection_confidence, min_tracking_confidence
-        )
-        self.video_processor = VideoProcessor(self.pose_estimator, webcam=0, flask=True)
-        self.start_estimation_flag = True
-        self.pose_estimation_active = True
+        if not self.pose_estimation_active:
+            self.pose_estimator = PoseEstimator(
+                model_complexity, min_detection_confidence, min_tracking_confidence
+            )
+            self.video_processor = VideoProcessor(self.pose_estimator, webcam=0, flask=True)
+            self.start_estimation_flag = True
+            self.pose_estimation_active = True
 
     def generate_frames(self):
         """Generates and yields frames during the pose estimation"""
-        if self.video_processor is None or not self.start_estimation_flag:
+        if not self.pose_estimation_active:
             return
 
         for annotated_frame in self.video_processor.process_video(show=True, width=1000):
@@ -60,15 +61,15 @@ class PoseEstimationApp:
 
     def terminate_estimation(self):
         """Terminate the pose estimation process."""
-
-        if self.video_processor is not None:
-            self.video_processor._terminate()
-            self.landmarks_series, self.fps = (
-                self.video_processor.normalized_world_landmarks_series,
-                self.video_processor.fps,
-            )
-        self.video_processor = None
-        self.pose_estimation_active = False
+        if self.pose_estimation_active:
+            if self.video_processor is not None:
+                self.video_processor._terminate()
+                self.landmarks_series, self.fps = (
+                    self.video_processor.normalized_world_landmarks_series,
+                    self.video_processor.fps,
+                )
+            self.video_processor = None
+            self.pose_estimation_active = False
 
     def process_data(self):
         """Process data series to compute joint, angle, and Fourier series data."""

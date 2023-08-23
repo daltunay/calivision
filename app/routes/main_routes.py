@@ -6,7 +6,7 @@ main_routes = Blueprint("main_routes", __name__)
 @main_routes.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        if current_app.app_instance.start_estimation_flag:
+        if current_app.app_instance.pose_estimation_active:
             current_app.app_instance.terminate_estimation()
         else:
             min_detection_confidence = float(request.form["min_detection_confidence"])
@@ -17,17 +17,13 @@ def index():
                 min_detection_confidence, min_tracking_confidence, model_complexity
             )
 
-    if current_app.app_instance.start_estimation_flag:
+    if current_app.app_instance.pose_estimation_active:
         action_button_text = "End" if current_app.app_instance.pose_estimation_active else "Start"
-        process_button_disabled = (
-            "disabled" if current_app.app_instance.pose_estimation_active else ""
-        )
     else:
         action_button_text = "Start"
-        process_button_disabled = (
-            "" if current_app.app_instance.pose_estimation_active else "disabled"
-        )
-
+    process_button_disabled = (
+        "disabled" if current_app.app_instance.landmarks_series is None else ""
+    )
     return render_template(
         "index.html",
         action_button_text=action_button_text,
