@@ -49,22 +49,22 @@
 
 <body>
     <div class="container">
-        <a href="{{ url_for('app_routes.index') }}" class="back-link">Back to Index</a>
+        <a href="{{ url_for('main_routes.index') }}" class="back-link">Back to Index</a>
         <h1>Explore Processed Data</h1>
 
         <h2>Joint Series Visualization</h2>
         <div>
-            <a href="{{ url_for('app_routes.visualize_joints') }}">View Joint Visualization</a>
+            <a href="{{ url_for('visualization_routes.visualize_joints') }}">View Joint Visualization</a>
         </div>
 
         <h2>Angle Visualizations</h2>
         <div>
-            <a href="{{ url_for('app_routes.visualize_angles') }}">View Angle Visualizations</a>
+            <a href="{{ url_for('visualization_routes.visualize_angles') }}">View Angle Visualizations</a>
         </div>
 
         <h2>Fourier Visualizations</h2>
         <div>
-            <a href="{{ url_for('app_routes.visualize_fourier') }}">View Fourier Visualizations</a>
+            <a href="{{ url_for('visualization_routes.visualize_fourier') }}">View Fourier Visualizations</a>
         </div>
     </div>
 </body>

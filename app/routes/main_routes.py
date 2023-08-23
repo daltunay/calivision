@@ -1,10 +1,9 @@
-from flask import Blueprint, Response, redirect, render_template, request, url_for, current_app
+from flask import Blueprint, Response, current_app, redirect, render_template, request, url_for
+
+main_routes = Blueprint("main_routes", __name__)
 
 
-app_routes = Blueprint("app_routes", __name__)
-
-
-@app_routes.route("/", methods=["GET", "POST"])
+@main_routes.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         if current_app.app_instance.start_estimation_flag:
@@ -36,7 +35,7 @@ def index():
     )
 
 
-@app_routes.route("/terminate", methods=["POST"])
+@main_routes.route("/terminate", methods=["POST"])
 def terminate():
     """Route to terminate pose estimation and redirect back to the homepage."""
 
@@ -44,7 +43,7 @@ def terminate():
     return redirect(url_for("index"))
 
 
-@app_routes.route("/process_data", methods=["GET"])
+@main_routes.route("/process_data", methods=["GET"])
 def process_data():
     """Route to process data and render data processing template."""
 
@@ -52,28 +51,7 @@ def process_data():
     return render_template("process_data.html")
 
 
-@app_routes.route("/visualize_joints")
-def visualize_joints():
-    """Route to visualize joint series data."""
-
-    return current_app.app_instance.visualize_joints()
-
-
-@app_routes.route("/visualize_angles")
-def visualize_angles():
-    """Route to visualize angle series data."""
-
-    return current_app.app_instance.visualize_angles()
-
-
-@app_routes.route("/visualize_fourier")
-def visualize_fourier():
-    """Route to visualize Fourier series data."""
-
-    return current_app.app_instance.visualize_fourier()
-
-
-@app_routes.route("/video_feed")
+@main_routes.route("/video_feed")
 def video_feed():
     """Route to provide video feed with annotated frames."""
 

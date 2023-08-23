@@ -10,8 +10,8 @@
 
 <body>
     <div id="joint-visualization"></div>
-    <a href="{{ url_for('app_routes.process_data') }}">Back to Explore Processed Data</a>
-    <a href="{{ url_for('app_routes.index') }}">Back to Index</a>
+    <a href="{{ url_for('main_routes.process_data') }}">Back to Explore Processed Data</a>
+    <a href="{{ url_for('main_routes.index') }}">Back to Index</a>
     <script>
         const jointData = {{ joint_series_plot| safe }};
         Plotly.newPlot('joint-visualization', jointData);
