@@ -119,7 +119,7 @@ def plot_joint_series(
             "method": "update",
             "args": [
                 {"visible": [False] * (num_timestamps * 2)},
-                {"title": f"Body landmarks at t={timestamps[i]}s (frame {i + 1})"},
+                {"title": f"Body landmarks at t={timestamps[i]:.3f}s (frame {i + 1})"},
             ],
             "label": f"{timestamps[i]:.2f}s",
         }
@@ -144,7 +144,7 @@ def plot_joint_series(
         width=1280,
         height=720,
         sliders=sliders,
-        title="Body landmarks at t=0s (frame 1)",
+        title="Body landmarks at t=0 (frame 1)",
         margin={"l": 0, "r": 0, "t": 50, "b": 0},
         scene={
             "aspectmode": "cube",  # Set aspect mode to manual
