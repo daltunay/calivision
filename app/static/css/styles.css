@@ -176,6 +176,6 @@ code {
 
 .unclickable {
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.3;
     /* You can adjust the opacity to indicate it's not clickable */
 }
