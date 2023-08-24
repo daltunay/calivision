@@ -49,7 +49,7 @@ class VideoProcessor:
         self.processed_frames: List[np.ndarray] = []
         self.annotated_processed_frames: List[np.ndarray] = []
 
-    def process_frame(
+    def _process_frame(
         self,
         frame: np.ndarray,
     ) -> Tuple[List[LandmarkList], List[LandmarkList]]:
@@ -113,7 +113,7 @@ class VideoProcessor:
 
             # Process frame
             frame = cv2.resize(frame, (new_width, new_height))
-            base_landmarks, normalized_world_landmarks = self.process_frame(frame)
+            base_landmarks, normalized_world_landmarks = self._process_frame(frame)
             if base_landmarks:
                 self.normalized_world_landmarks_series.append(normalized_world_landmarks)
                 self.base_landmarks_series.append(base_landmarks)

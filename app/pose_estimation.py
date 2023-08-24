@@ -34,7 +34,12 @@ class PoseEstimationApp:
         self.visibility_threshold = None
 
     def start_estimation(
-        self, min_detection_confidence, min_tracking_confidence, model_complexity
+        self,
+        min_detection_confidence,
+        min_tracking_confidence,
+        model_complexity,
+        path=None,  # fill
+        webcam=None,  # fill
     ):
         """Start the pose estimation process with given parameters.
 
@@ -49,7 +54,9 @@ class PoseEstimationApp:
                 model_complexity, min_detection_confidence, min_tracking_confidence
             )
             self.visibility_threshold = min_detection_confidence
-            self.video_processor = VideoProcessor(self.pose_estimator, webcam=0, flask=True)
+            self.video_processor = VideoProcessor(
+                self.pose_estimator, path=path, webcam=webcam, flask=True
+            )
             self.start_estimation_flag = True
             self.pose_estimation_active = True
 

@@ -13,8 +13,15 @@ def index():
             min_tracking_confidence = float(request.form["min_tracking_confidence"])
             model_complexity = int(request.form["model_complexity"])
 
+            source_type = request.form["source_type"]
+            if source_type == "webcam":
+                webcam = int(request.form["webcam"])
+                path = None
+            elif source_type == "path":
+                webcam = None
+                path = request.form["path"]
             current_app.app_instance.start_estimation(
-                min_detection_confidence, min_tracking_confidence, model_complexity
+                min_detection_confidence, min_tracking_confidence, model_complexity, path, webcam
             )
 
     if current_app.app_instance.pose_estimation_active:

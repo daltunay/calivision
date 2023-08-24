@@ -168,7 +168,14 @@ body {
 }
 
 code {
-    font-family: monospace; /* Use a monospaced font */
+    font-family: monospace;
+    /* Use a monospaced font */
     padding: auto auto;
     font-size: 14px;
+}
+
+.unclickable {
+    pointer-events: none;
+    opacity: 0.6;
+    /* You can adjust the opacity to indicate it's not clickable */
 }

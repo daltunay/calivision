@@ -41,6 +41,29 @@
     </div>
 
     <div class="content-container">
+        <div class="parameter-section">
+            <label for="source_type">Source Type:</label>
+            <input type="radio" id="source-webcam" name="source_type" value="webcam" onchange="handleSourceChange()">
+            <label for="source-webcam">Webcam</label>
+            <input type="radio" id="source-path" name="source_type" value="path" onchange="handleSourceChange()">
+            <label for="source-path">Path</label>
+        </div>
+
+        <div class="parameter-section" id="webcam-container" class="clickable-section">
+            <label for="webcam"><code>webcam_input:</code></label>
+            <input type="radio" id="webcam-0" name="webcam" value="0">
+            <label for="webcam-0">0</label>
+            <input type="radio" id="webcam-1" name="webcam" value="1">
+            <label for="webcam-1">1</label>
+        </div>
+
+        <div class="parameter-section" id="path-container" class="clickable-section">
+            <label for="path"><code>path:</code></label>
+            <input type="text" id="path" name="path">
+        </div>
+    </div>
+
+    <div class="content-container">
         <div class="vertical-button-group">
             <input class="button" type="submit" value="{{ action_button_text }}" id="actionButton">
             </form>
@@ -68,6 +91,23 @@
 
         function updateMinTrackingConfidence(value) {
             document.getElementById("min_tracking_value").innerHTML = "<code>" + value + "</code>";
+        }
+
+        function handleSourceChange() {
+            const sourceType = document.querySelector('input[name="source_type"]:checked').value;
+            const webcamContainer = document.getElementById("webcam-container");
+            const pathContainer = document.getElementById("path-container");
+
+            webcamContainer.classList.remove("unclickable");
+            pathContainer.classList.remove("unclickable");
+
+            if (sourceType === "webcam") {
+                webcamContainer.classList.add("selected");
+                pathContainer.classList.add("unclickable");
+            } else if (sourceType === "path") {
+                pathContainer.classList.add("selected");
+                webcamContainer.classList.add("unclickable");
+            }
         }
 
     </script>
