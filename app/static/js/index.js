@@ -69,3 +69,8 @@ videoUploadInput.addEventListener("change", handleSourceChange);
 
 // Trigger initial state
 handleSourceChange();
+
+function toggleCollapsiblePanel() {
+    const panel = document.querySelector('.collapsible-panel');
+    panel.classList.toggle('expanded');
+}
