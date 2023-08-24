@@ -58,9 +58,9 @@ sourceTypeInputs.forEach(input => {
     input.addEventListener("change", handleSourceChange);
 });
 webcamInputs.forEach(input => {
-    input.addEventListener("change", updateButtonState);
+    input.addEventListener("change", handleSourceChange);
 });
-videoUploadInput.addEventListener("change", updateButtonState);
+videoUploadInput.addEventListener("change", handleSourceChange);
 
 // Trigger initial state
 handleSourceChange();
