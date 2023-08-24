@@ -98,13 +98,15 @@
             const webcamContainer = document.getElementById("webcam-container");
             const pathContainer = document.getElementById("path-container");
 
-            webcamContainer.classList.remove("unclickable");
-            pathContainer.classList.remove("unclickable");
+            
+            
 
             if (sourceType === "webcam") {
+                webcamContainer.classList.remove("unclickable");
                 webcamContainer.classList.add("selected");
                 pathContainer.classList.add("unclickable");
             } else if (sourceType === "path") {
+                pathContainer.classList.remove("unclickable");
                 pathContainer.classList.add("selected");
                 webcamContainer.classList.add("unclickable");
             }
