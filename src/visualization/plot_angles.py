@@ -49,7 +49,7 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
     logging.info("Plotting angle time series")
     fig = go.Figure()
 
-    angle_frame = visible_angles_only(angle_frame, visibility_threshold)
+    angle_frame = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
 
     # Add traces for each angle combination
     for column in angle_frame.columns:
@@ -103,7 +103,7 @@ def plot_angle_heatmap(angle_frame: AngleSeries, visibility_threshold: float = 0
     # Create a heatmap figure
     fig = go.Figure()
 
-    angle_frame = visible_angles_only(angle_frame, visibility_threshold)
+    angle_frame = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
 
     # Convert the column names to a more readable format
     formatted_joint_names = [format_joint_name(column)[1] for column in angle_frame.columns]
