@@ -38,8 +38,8 @@ class PoseEstimationApp:
         min_detection_confidence,
         min_tracking_confidence,
         model_complexity,
-        path=None,  # fill
-        webcam=None,  # fill
+        path=None,
+        webcam=None,
     ):
         """Start the pose estimation process with given parameters.
 

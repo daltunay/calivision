@@ -2,10 +2,15 @@ from flask import Blueprint, Response, current_app, redirect, render_template, r
 
 index_routes = Blueprint("index_routes", __name__)
 
+import logging
+
+logging = logging.getLogger()
+
 
 @index_routes.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        logging.info("************************************* POST REQUEST")
         if current_app.app_instance.pose_estimation_active:
             current_app.app_instance.terminate_estimation()
         else:
@@ -13,13 +18,17 @@ def index():
             min_tracking_confidence = float(request.form["min_tracking_confidence"])
             model_complexity = int(request.form["model_complexity"])
 
-            source_type = request.form["source_type"]
+            source_type = str(request.form["source_type"])  # either 'webcam' or 'upload'
             if source_type == "webcam":
                 webcam = int(request.form["webcam"])
                 path = None
-            elif source_type == "path":
+            elif source_type == "upload":
+                logging.info(str(request.files))
                 webcam = None
-                path = request.form["path"]
+                upload = request.files["video_upload"]
+                path = f"saved/{upload.filename}"
+                upload.save(path)
+
             current_app.app_instance.start_estimation(
                 min_detection_confidence, min_tracking_confidence, model_complexity, path, webcam
             )

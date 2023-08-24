@@ -47,7 +47,7 @@
             <input type="radio" id="source-webcam" name="source_type" value="webcam" onchange="handleSourceChange()">
             <label for="source-webcam">Webcam</label>
             <input type="radio" id="source-upload" name="source_type" value="upload" onchange="handleSourceChange()">
-            <label for="source-upload">Upload</label> <!-- Changed label text -->
+            <label for="source-upload">Upload</label>
         </div>
 
         <!-- Webcam Input -->
@@ -59,11 +59,13 @@
             <label for="webcam-1">1</label>
         </div>
 
-        <!-- Video Input -->
-        <div class="parameter-section" id="upload-container" class="clickable-section">
-            <label for="video_upload"><code>video_input:</code></label>
-            <input type="file" id="video_upload" name="video_upload" accept="video/*">
-        </div>
+        <!-- Video Input
+        <form method="POST" enctype="multipart/form-data" action="/upload">
+            <div class="parameter-section" id="upload-container" class="clickable-section">
+                <label for="video_upload"><code>video_input:</code></label>
+                <input type="file" id="video_upload" name="video_upload" accept="video/*">
+            </div>
+        </form> -->
 
     </div>
 
@@ -76,8 +78,7 @@
             <!-- Form for processing data -->
             <form method="GET" action="/process_data">
                 <input class="button{{ ' button-disabled' if process_button_disabled else '' }}" type="submit"
-                    value="PROCESS DATA" {{ process_button_disabled }}
-                    onclick="return enableProcessData('{{ process_button_disabled }}');">
+                    value="PROCESS DATA" {{ process_button_disabled }}>
         </div>
         </form>
 
@@ -101,18 +102,21 @@
         function handleSourceChange() {
             const sourceType = document.querySelector('input[name="source_type"]:checked').value;
             const webcamContainer = document.getElementById("webcam-container");
-            const uploadContainer = document.getElementById("upload-container"); // Updated container ID
+            const uploadContainer = document.getElementById("upload-container");
 
             if (sourceType === "webcam") {
                 webcamContainer.classList.remove("unclickable");
                 webcamContainer.classList.add("selected");
-                uploadContainer.classList.add("unclickable"); // Updated container class
-            } else if (sourceType === "upload") { // Updated source type
-                uploadContainer.classList.remove("unclickable"); // Updated container class
-                uploadContainer.classList.add("selected"); // Updated container class
+                uploadContainer.classList.add("unclickable");
+                uploadContainer.classList.remove("selected");
+            } else if (sourceType === "upload") {
+                uploadContainer.classList.remove("unclickable");
+                uploadContainer.classList.add("selected");
                 webcamContainer.classList.add("unclickable");
+                webcamContainer.classList.remove("selected");
             }
         }
+
         // Initially, make both containers unclickable
         const webcamContainer = document.getElementById("webcam-container");
         const uploadContainer = document.getElementById("upload-container"); // Updated container ID
