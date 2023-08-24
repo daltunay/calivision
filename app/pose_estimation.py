@@ -152,7 +152,12 @@ class PoseEstimationApp:
             cls=plotly.utils.PlotlyJSONEncoder,
         )
         fourier_phase_plot = json.dumps(
-            plot_fourier_phase(self.fourier_series), cls=plotly.utils.PlotlyJSONEncoder
+            plot_fourier_phase(
+                self.fourier_series,
+                visibility_threshold=self.visibility_threshold,
+                visibility_percentage_threshold=0.5,
+            ),
+            cls=plotly.utils.PlotlyJSONEncoder,
         )
         return render_template(
             "visualize_fourier.html",

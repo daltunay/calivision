@@ -10,12 +10,14 @@ function updateMinTrackingConfidence(value) {
 
 // Function to update button state based on input elements
 function updateButtonState() {
-    const sourceType = document.querySelector('input[name="source_type"]:checked').value;
+    const sourceTypeInput = document.querySelector('input[name="source_type"]:checked');
     const actionButton = document.getElementById("actionButton");
     const webcamChecked = document.querySelector('input[name="webcam"]:checked');
     const videoUploadInput = document.querySelector('input[name="video_upload"]');
 
-    if ((sourceType === "webcam" && webcamChecked) || (sourceType === "upload" && videoUploadInput.files.length > 0)) {
+    if ((sourceTypeInput && sourceTypeInput.value === "webcam" && webcamChecked) ||
+        (sourceTypeInput && sourceTypeInput.value === "upload" && videoUploadInput.files.length > 0) ||
+        (actionButton.value == "END POSE ESTIMATION")) {
         actionButton.classList.remove("button-disabled");
         actionButton.classList.add("button");
         actionButton.removeAttribute("disabled");
@@ -26,10 +28,13 @@ function updateButtonState() {
     }
 }
 
+
+setInterval(updateButtonState, 1);
+
 // Function to handle change in video source
 function handleSourceChange() {
-    const sourceType = document.querySelector('input[name="source_type"]:checked').value;
-    const actionButton = document.getElementById("actionButton");
+    const sourceTypeInput = document.querySelector('input[name="source_type"]:checked');
+    const sourceType = sourceTypeInput ? sourceTypeInput.value : null;
     const webcamContainer = document.getElementById("webcam-container");
     const uploadContainer = document.getElementById("upload-container");
 
