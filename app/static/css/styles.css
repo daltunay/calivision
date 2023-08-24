@@ -227,7 +227,7 @@ code {
     margin-left: 0;
     margin-right: 0;
     max-width: 33%;
-    background-color: #007bff;
+    background-color: #007bff78;
     box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: max-height 0.3s ease-out;
@@ -267,5 +267,5 @@ code {
 }
 
 .collapsible-header:hover {
-    background-color: #0056b3;
+    background-color: #0057b378;
 }
