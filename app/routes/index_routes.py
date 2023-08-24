@@ -3,31 +3,45 @@ from flask import Blueprint, Response, current_app, redirect, render_template, r
 index_routes = Blueprint("index_routes", __name__)
 
 import logging
+import os
 
-logging = logging.getLogger()
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
 
 
 @index_routes.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        logging.info("************************************* POST REQUEST")
         if current_app.app_instance.pose_estimation_active:
             current_app.app_instance.terminate_estimation()
         else:
-            min_detection_confidence = float(request.form["min_detection_confidence"])
-            min_tracking_confidence = float(request.form["min_tracking_confidence"])
-            model_complexity = int(request.form["model_complexity"])
-
             source_type = str(request.form["source_type"])  # either 'webcam' or 'upload'
             if source_type == "webcam":
                 webcam = int(request.form["webcam"])
                 path = None
+                logging.info(f"Reading video input parameters ({source_type=}, {webcam=}")
             elif source_type == "upload":
-                logging.info(str(request.files))
                 webcam = None
                 upload = request.files["video_upload"]
-                path = f"saved/{upload.filename}"
+                logging.info(
+                    f"Reading video input parameters ({source_type=}, {upload.filename=})"
+                )
+                save_dir = os.path.join(current_app.root_path, "saved")
+                os.makedirs(save_dir, exist_ok=True)
+                path = os.path.join(save_dir, upload.filename)
                 upload.save(path)
+                logging.info(f"Saved file {upload.filename} to {save_dir}")
+
+            min_detection_confidence = float(request.form["min_detection_confidence"])
+            min_tracking_confidence = float(request.form["min_tracking_confidence"])
+            model_complexity = int(request.form["model_complexity"])
+            logging.info(
+                f"Reading pose estimation parameter values ({min_detection_confidence=}, {min_tracking_confidence=}, {model_complexity=})"
+            )
 
             current_app.app_instance.start_estimation(
                 min_detection_confidence, min_tracking_confidence, model_complexity, path, webcam
@@ -51,7 +65,6 @@ def index():
 @index_routes.route("/terminate", methods=["POST"])
 def terminate():
     """Route to terminate pose estimation and redirect back to the homepage."""
-
     current_app.app_instance.terminate_estimation()
     return redirect(url_for("index"))
 
@@ -59,7 +72,6 @@ def terminate():
 @index_routes.route("/process_data", methods=["GET"])
 def process_data():
     """Route to process data and render data processing template."""
-
     current_app.app_instance.process_data()
     return render_template("process_data.html")
 

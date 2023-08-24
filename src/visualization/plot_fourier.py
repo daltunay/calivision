@@ -1,7 +1,7 @@
 import logging
 
-import plotly.graph_objects as go
 import numpy as np
+import plotly.graph_objects as go
 
 from ..utils import format_joint_name
 

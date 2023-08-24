@@ -16,6 +16,13 @@ from src.visualization import (
     plot_joint_series,
 )
 
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
+
 
 class PoseEstimationApp:
     """Class to manage the body pose estimation application."""
@@ -49,6 +56,7 @@ class PoseEstimationApp:
             model_complexity (int): Model complexity level.
         """
         if not self.pose_estimation_active:
+            logging.info("Starting pose estimation")
             self.joint_series = None  # reset current data
             self.pose_estimator = PoseEstimator(
                 model_complexity, min_detection_confidence, min_tracking_confidence
@@ -75,6 +83,7 @@ class PoseEstimationApp:
         """Terminate the pose estimation process."""
         if self.pose_estimation_active:
             if self.video_processor is not None:
+                logging.info("Terminating pose estimation")
                 self.video_processor._terminate()
                 self.landmarks_series, self.fps = (
                     self.video_processor.normalized_world_landmarks_series,
@@ -89,6 +98,7 @@ class PoseEstimationApp:
         if self.landmarks_series is None:
             return "Pose estimation data not available."
 
+        logging.info("Processing pose estimation data")
         if self.joint_series is None:
             self.joint_series = JointSeries(landmarks_series=self.landmarks_series, fps=self.fps)
             self.joint_series.smooth(smooth_fraction=0.1, inplace=True)
