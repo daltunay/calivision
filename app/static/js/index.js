@@ -1,0 +1,66 @@
+// Function to update minimum detection confidence value
+function updateMinDetectionConfidence(value) {
+    document.getElementById("min_detection_value").innerHTML = "<code>" + value + "</code>";
+}
+
+// Function to update minimum tracking confidence value
+function updateMinTrackingConfidence(value) {
+    document.getElementById("min_tracking_value").innerHTML = "<code>" + value + "</code>";
+}
+
+// Function to update button state based on input elements
+function updateButtonState() {
+    const sourceType = document.querySelector('input[name="source_type"]:checked').value;
+    const actionButton = document.getElementById("actionButton");
+    const webcamChecked = document.querySelector('input[name="webcam"]:checked');
+    const videoUploadInput = document.querySelector('input[name="video_upload"]');
+
+    if ((sourceType === "webcam" && webcamChecked) || (sourceType === "upload" && videoUploadInput.files.length > 0)) {
+        actionButton.classList.remove("button-disabled");
+        actionButton.classList.add("button");
+        actionButton.removeAttribute("disabled");
+    } else {
+        actionButton.classList.remove("button");
+        actionButton.classList.add("button-disabled");
+        actionButton.setAttribute("disabled", "disabled");
+    }
+}
+
+// Function to handle change in video source
+function handleSourceChange() {
+    const sourceType = document.querySelector('input[name="source_type"]:checked').value;
+    const actionButton = document.getElementById("actionButton");
+    const webcamContainer = document.getElementById("webcam-container");
+    const uploadContainer = document.getElementById("upload-container");
+
+    // Handle action button clickability
+    updateButtonState();
+
+    // Handle source types clickability
+    webcamContainer.classList.toggle("selected", sourceType === "webcam");
+    webcamContainer.classList.toggle("unclickable", sourceType !== "webcam");
+    uploadContainer.classList.toggle("selected", sourceType === "upload");
+    uploadContainer.classList.toggle("unclickable", sourceType !== "upload");
+}
+
+// Initially, make both containers unclickable
+const webcamContainer = document.getElementById("webcam-container");
+const uploadContainer = document.getElementById("upload-container");
+webcamContainer.classList.add("unclickable");
+uploadContainer.classList.add("unclickable");
+
+// Add event listeners for input changes
+const sourceTypeInputs = document.querySelectorAll('input[name="source_type"]');
+const webcamInputs = document.querySelectorAll('input[name="webcam"]');
+const videoUploadInput = document.querySelector('input[name="video_upload"]');
+
+sourceTypeInputs.forEach(input => {
+    input.addEventListener("change", handleSourceChange);
+});
+webcamInputs.forEach(input => {
+    input.addEventListener("change", updateButtonState);
+});
+videoUploadInput.addEventListener("change", updateButtonState);
+
+// Trigger initial state
+handleSourceChange();
