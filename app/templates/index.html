@@ -2,18 +2,16 @@
 <html lang="en">
 
 <head>
-    <!-- Meta information -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>daltunay/calivision</title>
-
-    <!-- External CSS link -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
     <!-- Page title -->
     <h1 class="page-title">CaliVision: Body Pose Estimation</h1>
+
     <!-- Main Form -->
     <form method="POST" enctype="multipart/form-data">
         <!-- Parameters Section -->
@@ -21,32 +19,30 @@
             <h2 class="section-title">Parameters</h2>
             <div class="content-container">
                 <!-- Parameter section for minimum detection confidence -->
-                <form method="POST">
-                    <div class="parameter-section">
-                        <label for="min_detection_confidence"><code>min_detection_confidence:</code></label>
-                        <input class="slider" type="range" id="min_detection_confidence" name="min_detection_confidence"
-                            min="0" max="1" step="0.05" value="0.75"
-                            onchange="updateMinDetectionConfidence(this.value)">
-                        <span id="min_detection_value"><code>0.75</code></span>
-                    </div>
+                <div class="parameter-section">
+                    <label for="min_detection_confidence"><code>min_detection_confidence:</code></label>
+                    <input class="slider" type="range" id="min_detection_confidence" name="min_detection_confidence"
+                        min="0" max="1" step="0.05" value="0.75" onchange="updateMinDetectionConfidence(this.value)">
+                    <span id="min_detection_value"><code>0.75</code></span>
+                </div>
 
-                    <!-- Parameter section for minimum tracking confidence -->
-                    <div class="parameter-section">
-                        <label for="min_tracking_confidence"><code>min_tracking_confidence:</code></label>
-                        <input class="slider" type="range" id="min_tracking_confidence" name="min_tracking_confidence"
-                            min="0" max="1" step="0.05" value="0.75" onchange="updateMinTrackingConfidence(this.value)">
-                        <span id="min_tracking_value"><code>0.75</code></span>
-                    </div>
+                <!-- Parameter section for minimum tracking confidence -->
+                <div class="parameter-section">
+                    <label for="min_tracking_confidence"><code>min_tracking_confidence:</code></label>
+                    <input class="slider" type="range" id="min_tracking_confidence" name="min_tracking_confidence"
+                        min="0" max="1" step="0.05" value="0.75" onchange="updateMinTrackingConfidence(this.value)">
+                    <span id="min_tracking_value"><code>0.75</code></span>
+                </div>
 
-                    <!-- Parameter section for model complexity -->
-                    <div class="parameter-section">
-                        <label for="model_complexity"><code>model_complexity:</code></label>
-                        <select id="model_complexity" name="model_complexity">
-                            <option value="0"><code>0</code></option>
-                            <option value="1" selected><code>1</code></option>
-                            <option value="2"><code>2</code></option>
-                        </select>
-                    </div>
+                <!-- Parameter section for model complexity -->
+                <div class="parameter-section">
+                    <label for="model_complexity"><code>model_complexity:</code></label>
+                    <select id="model_complexity" name="model_complexity">
+                        <option value="0"><code>0</code></option>
+                        <option value="1" selected><code>1</code></option>
+                        <option value="2"><code>2</code></option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -56,28 +52,26 @@
             <div class="content-container">
                 <!-- Choose video source -->
                 <div class="parameter-section">
-                    <label for="source_type">Choose your video source:</label>
-                    <input type="radio" id="source-webcam" name="source_type" value="webcam"
-                        onchange="handleSourceChange()">
-                    <label for="source-webcam">Webcam</label>
-                    <input type="radio" id="source-upload" name="source_type" value="upload"
-                        onchange="handleSourceChange()">
-                    <label for="source-upload">Upload</label>
+                    <label>Choose your video source:</label>
+                    <input type="radio" name="source_type" value="webcam" onchange="handleSourceChange()">
+                    <label>Webcam</label>
+                    <input type="radio" name="source_type" value="upload" onchange="handleSourceChange()">
+                    <label>Upload</label>
                 </div>
 
                 <!-- Webcam Input -->
-                <div class="parameter-section" id="webcam-container" class="clickable-section">
-                    <label for="webcam"><code>webcam_input:</code></label>
-                    <input type="radio" id="webcam-0" name="webcam" value="0">
-                    <label for="webcam-0">0</label>
-                    <input type="radio" id="webcam-1" name="webcam" value="1">
-                    <label for="webcam-1">1</label>
+                <div class="parameter-section clickable-section" id="webcam-container">
+                    <label><code>webcam_input:</code></label>
+                    <input type="radio" name="webcam" value="0">
+                    <label>0</label>
+                    <input type="radio" name="webcam" value="1">
+                    <label>1</label>
                 </div>
 
                 <!-- Video Input -->
-                <div class="parameter-section" id="upload-container" class="clickable-section">
-                    <label for="video_upload"><code>video_input:</code></label>
-                    <input type="file" id="video_upload" name="video_upload" accept="video/*">
+                <div class="parameter-section clickable-section" id="upload-container">
+                    <label><code>video_input:</code></label>
+                    <input type="file" name="video_upload" accept="video/*">
                 </div>
             </div>
         </div>
@@ -85,7 +79,6 @@
         <!-- Action and Process Button Section -->
         <div class="section">
             <h2 class="section-title">Pose Estimation</h2>
-            <!-- Action buttons -->
             <div class="vertical-button-group">
                 <input class="button-disabled" type="submit" value="{{ action_button_text }}" id="actionButton"
                     disabled>
@@ -115,14 +108,14 @@
         </a>
     </div>
 
-    <!-- JavaScript for updating displayed values and button text -->
+    <!-- JavaScript -->
     <script>
-        // Update minimum detection confidence value
+        // Function to update minimum detection confidence value
         function updateMinDetectionConfidence(value) {
             document.getElementById("min_detection_value").innerHTML = "<code>" + value + "</code>";
         }
 
-        // Update minimum tracking confidence value
+        // Function to update minimum tracking confidence value
         function updateMinTrackingConfidence(value) {
             document.getElementById("min_tracking_value").innerHTML = "<code>" + value + "</code>";
         }
@@ -132,13 +125,9 @@
             const sourceType = document.querySelector('input[name="source_type"]:checked').value;
             const actionButton = document.getElementById("actionButton");
             const webcamChecked = document.querySelector('input[name="webcam"]:checked');
-            const videoUploadInput = document.getElementById("video_upload");
+            const videoUploadInput = document.querySelector('input[name="video_upload"]');
 
-            if (sourceType === "webcam" && webcamChecked) {
-                actionButton.classList.remove("button-disabled");
-                actionButton.classList.add("button");
-                actionButton.removeAttribute("disabled");
-            } else if (sourceType === "upload" && videoUploadInput.files.length > 0) {
+            if ((sourceType === "webcam" && webcamChecked) || (sourceType === "upload" && videoUploadInput.files.length > 0)) {
                 actionButton.classList.remove("button-disabled");
                 actionButton.classList.add("button");
                 actionButton.removeAttribute("disabled");
@@ -149,10 +138,10 @@
             }
         }
 
-        // Handle change in video source
+        // Function to handle change in video source
         function handleSourceChange() {
             const sourceType = document.querySelector('input[name="source_type"]:checked').value;
-            const actionButton = document.getElementById("actionButton"); // Get the action button element
+            const actionButton = document.getElementById("actionButton");
             const webcamContainer = document.getElementById("webcam-container");
             const uploadContainer = document.getElementById("upload-container");
 
@@ -160,17 +149,10 @@
             updateButtonState();
 
             // Handle source types clickability
-            if (sourceType === "webcam") {
-                webcamContainer.classList.remove("unclickable");
-                webcamContainer.classList.add("selected");
-                uploadContainer.classList.add("unclickable");
-                uploadContainer.classList.remove("selected");
-            } else if (sourceType === "upload") {
-                uploadContainer.classList.remove("unclickable");
-                uploadContainer.classList.add("selected");
-                webcamContainer.classList.add("unclickable");
-                webcamContainer.classList.remove("selected");
-            }
+            webcamContainer.classList.toggle("selected", sourceType === "webcam");
+            webcamContainer.classList.toggle("unclickable", sourceType !== "webcam");
+            uploadContainer.classList.toggle("selected", sourceType === "upload");
+            uploadContainer.classList.toggle("unclickable", sourceType !== "upload");
         }
 
         // Initially, make both containers unclickable
@@ -179,27 +161,22 @@
         webcamContainer.classList.add("unclickable");
         uploadContainer.classList.add("unclickable");
 
-        // Function to handle video upload button
-        function selectVideo() {
-            const videoUploadInput = document.getElementById("video_upload");
-            videoUploadInput.click();
-        }
-
         // Add event listeners for input changes
         const sourceTypeInputs = document.querySelectorAll('input[name="source_type"]');
         const webcamInputs = document.querySelectorAll('input[name="webcam"]');
-        const videoUploadInput = document.getElementById("video_upload");
+        const videoUploadInput = document.querySelector('input[name="video_upload"]');
 
         sourceTypeInputs.forEach(input => {
-            input.addEventListener("change", updateButtonState);
+            input.addEventListener("change", handleSourceChange);
         });
         webcamInputs.forEach(input => {
             input.addEventListener("change", updateButtonState);
         });
         videoUploadInput.addEventListener("change", updateButtonState);
 
+        // Trigger initial state
+        handleSourceChange();
     </script>
-
 </body>
 
 </html>
