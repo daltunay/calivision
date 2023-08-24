@@ -80,12 +80,14 @@
         <div class="section">
             <h2 class="section-title">Pose Estimation</h2>
             <div class="vertical-button-group">
+                <!-- Action button -->
                 <input class="button-disabled" type="submit" value="{{ action_button_text }}" id="actionButton"
                     disabled>
             </div>
     </form>
     <!-- Form for processing data -->
     <form method="GET" action="/process_data">
+        <!-- Process data button -->
         <input class="button{{ ' button-disabled' if process_button_disabled else '' }}" type="submit"
             value="PROCESS DATA" {{ process_button_disabled }}>
     </form>
