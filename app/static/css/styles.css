@@ -96,6 +96,15 @@ body {
 /* Disabled Button */
 .button-disabled {
     background-color: #ccc;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
     cursor: not-allowed;
 }
 
@@ -185,9 +194,9 @@ code {
     position: fixed;
     bottom: 0;
     left: 0;
-    margin: 20px;
+    margin: 30px;
     display: flex;
-    gap: 10px;
+    gap: 20px;
 }
 
 /* Social Link */
