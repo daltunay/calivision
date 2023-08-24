@@ -16,7 +16,7 @@ body {
 
 /* Main Content Container */
 .content-container {
-    margin-top: 50px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -178,4 +178,34 @@ code {
     pointer-events: none;
     opacity: 0.3;
     /* You can adjust the opacity to indicate it's not clickable */
+}
+
+/* Social Links Container */
+.social-links-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Social Link */
+.social-link {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+}
+
+/* Style the images within the social links */
+.social-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+/* Add hover effect for the social links */
+.social-link:hover img {
+    transform: scale(1.1);
 }
