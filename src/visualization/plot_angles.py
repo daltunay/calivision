@@ -20,6 +20,8 @@ def visible_angles_only(angle_frame, visibility_threshold):
         .applymap(lambda visibility: visibility > visibility_threshold)
     )
 
+    visible_columns = []
+
     # Remove angles with non-visible joints
     for timestamp in angle_frame.index:
         for col in angle_frame.columns:
@@ -49,10 +51,10 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
     logging.info("Plotting angle time series")
     fig = go.Figure()
 
-    angle_frame = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
+    to_plot = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
 
     # Add traces for each angle combination
-    for column in angle_frame.columns:
+    for column in to_plot.columns:
         (first, mid, end), formatted_joint_name = format_joint_name(column)
 
         # Define hover template for tooltips
@@ -67,8 +69,8 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
         # Add a scatter trace for the angle series
         fig.add_trace(
             go.Scatter(
-                x=angle_frame.index,
-                y=angle_frame[column],
+                x=to_plot.index,
+                y=to_plot[column],
                 mode="lines",
                 name=formatted_joint_name,
                 hovertemplate=hover_template,
@@ -103,19 +105,19 @@ def plot_angle_heatmap(angle_frame: AngleSeries, visibility_threshold: float = 0
     # Create a heatmap figure
     fig = go.Figure()
 
-    angle_frame = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
+    to_plot = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
 
     # Convert the column names to a more readable format
-    formatted_joint_names = [format_joint_name(column)[1] for column in angle_frame.columns]
+    formatted_joint_names = [format_joint_name(column)[1] for column in to_plot.columns]
 
     # Define hover template for tooltips
     hover_template = "body angle: %{y}<br>" "time: %{x:.2f}s<br>" "angle: %{z:.2f}°"
 
     # Create the heatmap
     heatmap = go.Heatmap(
-        x=angle_frame.index,
+        x=to_plot.index,
         y=formatted_joint_names,
-        z=angle_frame.values.T,
+        z=to_plot.values.T,
         colorscale="magma",
         hoverongaps=False,
         colorbar={"title": "Angle (°)"},
