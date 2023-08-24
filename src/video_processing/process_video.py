@@ -182,10 +182,10 @@ class VideoProcessor:
             landmark_list=landmarks,
             connections=mp.solutions.pose.POSE_CONNECTIONS,
             landmark_drawing_spec=mp.solutions.drawing_utils.DrawingSpec(
-                color=(245, 117, 66), thickness=2, circle_radius=2
+                color=(0, 0, 255), thickness=2, circle_radius=5
             ),
             connection_drawing_spec=mp.solutions.drawing_utils.DrawingSpec(
-                color=(245, 66, 230), thickness=2, circle_radius=2
+                color=(0, 0, 0), thickness=2, circle_radius=3
             ),
         )
         return annotated_image
