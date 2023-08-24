@@ -12,6 +12,11 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
+# Create a mapping of Mediapipe PoseLandmark values to their names
+MAPPING = {
+    landmark_ref._value_: landmark_ref._name_ for landmark_ref in mp.solutions.pose.PoseLandmark
+}
+
 
 def plot_joint_series(
     joints_frame: JointSeries,
@@ -84,11 +89,7 @@ def plot_joint_series(
 
         # Create a list to store connections for plotting
         connections = {axis: [] for axis in ("x", "y", "z")}
-        # Create a mapping of Mediapipe PoseLandmark values to their names
-        MAPPING = {
-            landmark_ref._value_: landmark_ref._name_
-            for landmark_ref in mp.solutions.pose.PoseLandmark
-        }
+
         for connection in mp.solutions.pose.POSE_CONNECTIONS:
             start_joint, end_joint = MAPPING[connection[0]], MAPPING[connection[1]]
             if all(joint in landmarks_subset.index for joint in (start_joint, end_joint)):
