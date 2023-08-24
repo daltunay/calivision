@@ -169,17 +169,13 @@ class VideoProcessor:
         )
 
     @staticmethod
-    def _show_landmarks(
-        image: np.ndarray,
-        landmarks: LandmarkList,
-    ) -> None:
+    def _show_landmarks(image: np.ndarray, landmarks: LandmarkList) -> None:
         """Draw pose landmarks on an input image.
 
         Args:
             image (np.ndarray): Image array with RGB format, shape (height, width, 3).
             landmarks (LandmarkList): Pose estimation result landmarks.
         """
-        # Modify to return annotated image
         annotated_image = image.copy()
         mp.solutions.drawing_utils.draw_landmarks(
             image=annotated_image,
@@ -203,10 +199,34 @@ class VideoProcessor:
             time (float): Time in seconds.
         """
         annotated_image = image.copy()
+
+        # Create a white rectangle as the background for the timestamp with a black border
+        rect_color = (255, 255, 255)  # White background
+        border_color = (0, 0, 0)  # Black border
+        text = f"t={time:.3f}s"
+        text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
+        rect_width = text_size[0] + 20
+        rect_height = text_size[1] + 20
+        cv2.rectangle(
+            img=annotated_image,
+            pt1=(0, 0),
+            pt2=(rect_width, rect_height),
+            color=rect_color,
+            thickness=cv2.FILLED,
+        )
+        cv2.rectangle(
+            img=annotated_image,
+            pt1=(0, 0),
+            pt2=(rect_width, rect_height),
+            color=border_color,
+            thickness=2,
+        )
+
+        # Put the timestamp text on the white background
         cv2.putText(
             img=annotated_image,
-            text=f"t={time:.3f}s",
-            org=(10, 30),
+            text=text,
+            org=(10, text_size[1] + 10),
             fontFace=cv2.FONT_HERSHEY_SIMPLEX,
             fontScale=1,
             color=(0, 0, 0),
