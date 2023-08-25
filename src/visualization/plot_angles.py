@@ -97,7 +97,6 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
             args=[
                 {"visible": [True, False] * len(to_plot_raw.columns)},
                 {"yaxis": {"title": "Angle (°)"}},
-                {"title": "Evolution of Raw Body Angles Over Time"},
             ],
         ),
         dict(
@@ -105,8 +104,7 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
             method="update",
             args=[
                 {"visible": [False, True] * len(to_plot_normalized.columns)},
-                {"yaxis": {"title": "Normalized Angle"}},
-                {"title": "Evolution of Normalized Body Angles Over Time"},
+                {"yaxis": {"title": "Angle (Normalized)"}},
             ],
         ),
     ]
@@ -184,7 +182,7 @@ def plot_angle_heatmap(angle_frame: AngleSeries, visibility_threshold: float = 0
         z=to_plot_normalized.values.T,
         colorscale="magma",
         hoverongaps=False,
-        colorbar={"title": "Normalized Angle"},
+        colorbar={"title": "Angle (Normalized)"},
         zmin=0,
         zmax=1.0,
         hovertemplate=hover_template_normalized,
@@ -201,14 +199,13 @@ def plot_angle_heatmap(angle_frame: AngleSeries, visibility_threshold: float = 0
         dict(
             label="Raw",
             method="update",
-            args=[{"visible": [True, False]}, {"title": "Heatmap of Raw Body Angles Over Time"}],
+            args=[{"visible": [True, False]}],
         ),
         dict(
             label="Normalized",
             method="update",
             args=[
                 {"visible": [False, True]},
-                {"title": "Heatmap of Normalized Body Angles Over Time"},
             ],
         ),
     ]

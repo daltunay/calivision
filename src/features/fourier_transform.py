@@ -65,5 +65,5 @@ class FourierSeries(pd.DataFrame):
     def phase(self) -> pd.DataFrame:
         """Retrieve the phase of the Fourier transform for all frequencies."""
         return pd.DataFrame(
-            np.angle(self, deg=True), index=self.index, columns=self.columns, dtype="float32"
+            np.angle(self, deg=False), index=self.index, columns=self.columns, dtype="float32"
         )

@@ -105,7 +105,7 @@ def plot_fourier_magnitude(
             method="update",
             args=[
                 {"y": [magnitude_frame[column] for column in magnitude_frame.columns]},
-                {"title": "Fourier Frequency Domain : Magnitude (Raw)"},
+                {"yaxis": {"title": "Magnitude (°)"}},
             ],
         ),
         dict(
@@ -118,7 +118,7 @@ def plot_fourier_magnitude(
                         for column in magnitude_frame.columns
                     ]
                 },
-                {"title": "Fourier Frequency Domain : Magnitude (Normalized)"},
+                {"yaxis": {"title": "Magnitude (Normalized)"}},
             ],
         ),
     ]
@@ -137,9 +137,9 @@ def plot_fourier_magnitude(
         ],
         width=1280,
         height=720,
-        title="Fourier Frequency Domain : Magnitude (Raw)",  # Initial title
+        title="Fourier Frequency Domain : Magnitude",  # Initial title
         xaxis_title="Frequency (s⁻¹)",
-        yaxis_title="Magnitude",
+        yaxis_title="Magnitude (°)",
         legend_title="Body Angles",
         hovermode="closest",
     )
@@ -178,8 +178,8 @@ def plot_fourier_phase(
                     f"first: {first}<br>"
                     f"mid: {mid}<br>"
                     f"end: {end}<br>"
-                    "frequency: %{x:.2e}<br>"
-                    "phase: %{y:.2f}°<extra></extra>"
+                    "frequency: %{x:.2e}s⁻¹<br>"
+                    "phase: %{y:.2f}rad<extra></extra>"
                 ),
                 text=formatted_joint_name,
             )
@@ -190,9 +190,34 @@ def plot_fourier_phase(
         height=720,
         title="Fourier Frequency Domain : Phase",
         xaxis_title="Frequency (s⁻¹)",
-        yaxis_title="Phase (°)",
+        yaxis_title="Phase (rad)",
         legend_title="Body Angles",
         hovermode="closest",
+        yaxis=dict(
+            tickvals=[
+                -np.pi,
+                -0.5 * np.pi,
+                -0.75 * np.pi,
+                -0.25 * np.pi,
+                0,
+                0.25 * np.pi,
+                0.5 * np.pi,
+                0.75 * np.pi,
+                np.pi,
+            ],
+            ticktext=[
+                r"-π",
+                r"-3π/4",
+                r"-π/2",
+                r"-π/4",
+                "0",
+                r"π/4",
+                r"π/2",
+                r"3π/4",
+                r"π",
+            ],
+            title="Phase (rad)",
+        ),
     )
 
     return fig
