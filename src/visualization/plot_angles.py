@@ -20,8 +20,6 @@ def visible_angles_only(angle_frame, visibility_threshold):
         .applymap(lambda visibility: visibility > visibility_threshold)
     )
 
-    visible_columns = []
-
     # Remove angles with non-visible joints
     for timestamp in angle_frame.index:
         for col in angle_frame.columns:
