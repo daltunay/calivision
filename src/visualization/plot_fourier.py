@@ -47,14 +47,24 @@ def visible_angles_only(
     return visible_columns
 
 
+def normalize_magnitude_frame(magnitude_frame):
+    return magnitude_frame.divide(magnitude_frame.sum())
+
+
 def plot_fourier_magnitude(
-    fourier_frame, visibility_threshold: float = 0.5, visibility_percentage_threshold: float = 0.5
+    fourier_frame,
+    visibility_threshold: float = 0.5,
+    visibility_percentage_threshold: float = 0.5,
+    normalize_magnitude: bool = False,
 ):
     """Plot Fourier magnitude data as an interactive bar plot.
 
     Args:
         fourier_frame (FourierSeries): FourierSeries frame.
             Columns represent joint combinations, and the index represents frequency.
+        visibility_threshold (float): Threshold to determine which joints are considered visible or not.
+        visibility_percentage_threshold (float): Percentage threshold for visible timestamps.
+        normalize_magnitude (bool): Flag to indicate whether to normalize the magnitude data.
 
     Returns:
         go.Figure: Interactive bar plot of Fourier magnitude data.
@@ -66,6 +76,9 @@ def plot_fourier_magnitude(
         fourier_frame, visibility_threshold, visibility_percentage_threshold
     )
     magnitude_frame = fourier_frame.magnitude.loc[:, visible_angles]
+
+    if normalize_magnitude:
+        magnitude_frame = normalize_magnitude_frame(magnitude_frame)
 
     for column in magnitude_frame.columns:
         (first, mid, end), formatted_joint_name = format_joint_name(column)
@@ -85,12 +98,48 @@ def plot_fourier_magnitude(
             )
         )
 
+    # Define buttons
+    buttons = [
+        dict(
+            label="Raw",
+            method="update",
+            args=[
+                {"y": [magnitude_frame[column] for column in magnitude_frame.columns]},
+                {"title": "Fourier Frequency Domain : Magnitude (Raw)"},
+            ],
+        ),
+        dict(
+            label="Normalized",
+            method="update",
+            args=[
+                {
+                    "y": [
+                        normalize_magnitude_frame(magnitude_frame[column])
+                        for column in magnitude_frame.columns
+                    ]
+                },
+                {"title": "Fourier Frequency Domain : Magnitude (Normalized)"},
+            ],
+        ),
+    ]
+
     fig.update_layout(
+        updatemenus=[
+            {
+                "buttons": buttons,
+                "direction": "up",
+                "showactive": True,
+                "x": 1,
+                "xanchor": "right",
+                "y": 1,
+                "yanchor": "top",
+            }
+        ],
         width=1280,
         height=720,
-        title="Fourier Frequency Domain : Magnitude",
+        title="Fourier Frequency Domain : Magnitude (Raw)",  # Initial title
         xaxis_title="Frequency (s⁻¹)",
-        yaxis_title="Magnitude (°)",
+        yaxis_title="Magnitude",
         legend_title="Body Angles",
         hovermode="closest",
     )
