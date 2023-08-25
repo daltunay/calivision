@@ -1,7 +1,6 @@
 import logging
 
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 from ..features import AngleSeries
 from ..utils import format_joint_name
