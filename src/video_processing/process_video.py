@@ -184,7 +184,7 @@ class VideoProcessor:
                 color=(0, 0, 255), thickness=2, circle_radius=5
             ),
             connection_drawing_spec=mp.solutions.drawing_utils.DrawingSpec(
-                color=(0, 0, 0), thickness=2, circle_radius=3
+                color=(0, 0, 0), thickness=3
             ),
         )
         return annotated_image
