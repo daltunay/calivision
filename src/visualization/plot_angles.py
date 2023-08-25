@@ -1,6 +1,7 @@
 import logging
 
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from ..features import AngleSeries
 from ..utils import format_joint_name
@@ -49,10 +50,14 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
     logging.info("Plotting angle time series")
     fig = go.Figure()
 
-    to_plot = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
+    to_plot_raw = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
 
-    # Add traces for each angle combination
-    for column in to_plot.columns:
+    to_plot_normalized = (to_plot_raw - to_plot_raw.min()) / (
+        to_plot_raw.max() - to_plot_raw.min()
+    )
+
+    # Add traces for each angle combination (both raw and normalized)
+    for column in to_plot_raw.columns:
         (first, mid, end), formatted_joint_name = format_joint_name(column)
 
         # Define hover template for tooltips
@@ -64,24 +69,66 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
             "angle: %{y:.2f}°"
         )
 
-        # Add a scatter trace for the angle series
-        fig.add_trace(
-            go.Scatter(
-                x=to_plot.index,
-                y=to_plot[column],
-                mode="lines",
-                name=formatted_joint_name,
-                hovertemplate=hover_template,
-            )
+        # Add scatter traces for raw and normalized data
+        raw_trace = go.Scatter(
+            x=to_plot_raw.index,
+            y=to_plot_raw[column],
+            mode="lines",
+            name=f"raw: {formatted_joint_name}",
+            hovertemplate=hover_template,
+            visible=True,  # Show raw data traces by default
+        )
+        normalized_trace = go.Scatter(
+            x=to_plot_normalized.index,
+            y=to_plot_normalized[column],
+            mode="lines",
+            name=f"norm: {formatted_joint_name}",
+            hovertemplate=hover_template,
+            visible=False,  # Hide normalized data traces by default
         )
 
-    # Update layout of the figure
+        fig.add_trace(raw_trace)
+        fig.add_trace(normalized_trace)
+
+    # Define buttons
+    buttons = [
+        dict(
+            label="Raw",
+            method="update",
+            args=[
+                {"visible": [True, False] * len(to_plot_raw.columns)},
+                {"yaxis": {"title": "Angle (°)"}},
+                {"title": "Evolution of Raw Body Angles Over Time"},
+            ],
+        ),
+        dict(
+            label="Normalized",
+            method="update",
+            args=[
+                {"visible": [False, True] * len(to_plot_normalized.columns)},
+                {"yaxis": {"title": "Normalized Angle"}},
+                {"title": "Evolution of Normalized Body Angles Over Time"},
+            ],
+        ),
+    ]
+
     fig.update_layout(
+        updatemenus=[
+            {
+                "buttons": buttons,
+                "direction": "up",
+                "showactive": True,
+                "x": 1,
+                "xanchor": "right",
+                "y": 1,
+                "yanchor": "top",
+            }
+        ],
         width=1280,
         height=720,
         title="Evolution of Body Angles Over Time",
         xaxis_title="Time (s)",
-        yaxis_title="Angle (°)",
+        yaxis_title="Angle (°)",  # Default y-axis title
         legend_title="Body Angles",
         hovermode="closest",
     )
@@ -99,40 +146,89 @@ def plot_angle_heatmap(angle_frame: AngleSeries, visibility_threshold: float = 0
     Returns:
         go.Figure: A heatmap displaying the angle series.
     """
-    logging.info("Plotting angle heatmap")
-    # Create a heatmap figure
+    logging.info("Plotting angle time heatmap")
     fig = go.Figure()
 
-    to_plot = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
+    to_plot_raw = visible_angles_only(angle_frame, visibility_threshold).dropna(axis=1, how="all")
+    to_plot_normalized = (to_plot_raw - to_plot_raw.min()) / (
+        to_plot_raw.max() - to_plot_raw.min()
+    )
 
-    # Convert the column names to a more readable format
-    formatted_joint_names = [format_joint_name(column)[1] for column in to_plot.columns]
+    formatted_joint_names = []
+    for column in to_plot_raw.columns:
+        (_, _, _), formatted_joint_name = format_joint_name(column)
+        formatted_joint_names.append(formatted_joint_name)
 
     # Define hover template for tooltips
-    hover_template = "body angle: %{y}<br>" "time: %{x:.2f}s<br>" "angle: %{z:.2f}°"
+    hover_template_raw = "body angle: %{y}<br>" "time: %{x:.2f}s<br>" "angle: %{z:.2f}°"
+    hover_template_normalized = "body angle: %{y}<br>" "time: %{x:.2f}s<br>" "angle: %{z:.2f}"
 
-    # Create the heatmap
-    heatmap = go.Heatmap(
-        x=to_plot.index,
+    # Create initial raw heatmap trace
+    raw_heatmap = go.Heatmap(
+        x=to_plot_raw.index,
         y=formatted_joint_names,
-        z=to_plot.values.T,
+        z=to_plot_raw.values.T,
         colorscale="magma",
         hoverongaps=False,
         colorbar={"title": "Angle (°)"},
         zmin=0,
         zmax=180.0,
-        hovertemplate=hover_template,
-        name="",
+        hovertemplate=hover_template_raw,
+        name="Raw",
+        visible=True,
     )
 
-    # Add the heatmap trace to the figure
-    fig.add_trace(heatmap)
+    # Create normalized heatmap trace
+    normalized_heatmap = go.Heatmap(
+        x=to_plot_normalized.index,
+        y=formatted_joint_names,
+        z=to_plot_normalized.values.T,
+        colorscale="magma",
+        hoverongaps=False,
+        colorbar={"title": "Normalized Angle"},
+        zmin=0,
+        zmax=1.0,
+        hovertemplate=hover_template_normalized,
+        name="Normalized",
+        visible=False,
+    )
 
-    # Update layout of the figure
+    # Add the heatmap traces to the figure
+    fig.add_trace(raw_heatmap)
+    fig.add_trace(normalized_heatmap)
+
+    # Define buttons
+    buttons = [
+        dict(
+            label="Raw",
+            method="update",
+            args=[{"visible": [True, False]}, {"title": "Heatmap of Raw Body Angles Over Time"}],
+        ),
+        dict(
+            label="Normalized",
+            method="update",
+            args=[
+                {"visible": [False, True]},
+                {"title": "Heatmap of Normalized Body Angles Over Time"},
+            ],
+        ),
+    ]
+
     fig.update_layout(
+        updatemenus=[
+            {
+                "buttons": buttons,
+                "direction": "up",
+                "showactive": True,
+                "x": 1,
+                "xanchor": "right",
+                "y": 1,
+                "yanchor": "top",
+            }
+        ],
         width=1280,
         height=720,
-        title="Heatmap of Body Angles Over Time",
+        title="Heatmap of Raw Body Angles Over Time",  # Initial title
         xaxis_title="Time (s)",
         yaxis_title="Body Angles",
         hovermode="closest",
