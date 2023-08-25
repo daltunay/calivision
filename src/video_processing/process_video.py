@@ -141,8 +141,7 @@ class VideoProcessor:
             success, frame = self.cap.read()  # Read next frame
 
         # Cleanup
-        if not self.flask:
-            self._terminate()
+        self._terminate()
         return None
 
     def _initialize_progress_bar(self):
