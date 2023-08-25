@@ -1,6 +1,8 @@
 import logging
+
 import mediapipe as mp
 import plotly.graph_objects as go
+
 from ..features import JointSeries
 
 logging.basicConfig(
