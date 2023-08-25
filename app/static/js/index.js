@@ -15,9 +15,15 @@ function updateButtonState() {
     const webcamChecked = document.querySelector('input[name="webcam"]:checked');
     const videoUploadInput = document.querySelector('input[name="video_upload"]');
 
-    if ((sourceTypeInput && sourceTypeInput.value === "webcam" && webcamChecked) ||
-        (sourceTypeInput && sourceTypeInput.value === "upload" && videoUploadInput.files.length > 0) ||
-        (actionButton.value == "END POSE ESTIMATION")) {
+    if (actionButton.value === "END POSE ESTIMATION") {
+        // Wait for 3 seconds before enabling the button
+        setTimeout(() => {
+            actionButton.classList.remove("button-disabled");
+            actionButton.classList.add("button");
+            actionButton.removeAttribute("disabled");
+        }, 3000);
+    } else if ((sourceTypeInput && sourceTypeInput.value === "webcam" && webcamChecked) ||
+        (sourceTypeInput && sourceTypeInput.value === "upload" && videoUploadInput.files.length > 0)) {
         actionButton.classList.remove("button-disabled");
         actionButton.classList.add("button");
         actionButton.removeAttribute("disabled");
