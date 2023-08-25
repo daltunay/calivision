@@ -74,7 +74,7 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
             x=to_plot_raw.index,
             y=to_plot_raw[column],
             mode="lines",
-            name=f"raw: {formatted_joint_name}",
+            name=formatted_joint_name,
             hovertemplate=hover_template,
             visible=True,  # Show raw data traces by default
         )
@@ -82,7 +82,7 @@ def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float =
             x=to_plot_normalized.index,
             y=to_plot_normalized[column],
             mode="lines",
-            name=f"norm: {formatted_joint_name}",
+            name=formatted_joint_name,
             hovertemplate=hover_template,
             visible=False,  # Hide normalized data traces by default
         )
