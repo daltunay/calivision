@@ -54,6 +54,16 @@ class VideoProcessor:
 
         self._terminated = False
 
+        # Manage the path and webcam inputs
+        if self.path and self.webcam:
+            raise ValueError("Both 'path' and 'webcam' cannot be specified at the same time")
+        (self.input_type, self.source) = (
+            ("path", self.path) if self.path else ("webcam", self.webcam)
+        )
+        logging.info(
+            f"Initializing VideoProcessor for input: {self.input_type} (source {self.source})"
+        )
+
     def _process_frame(
         self,
         frame: np.ndarray,
@@ -86,15 +96,7 @@ class VideoProcessor:
             height (Optional[int]): Desired height for resizing.
         """
         self._terminated = False
-        # Manage the path and webcam inputs
-        if self.path and self.webcam:
-            raise ValueError("Both 'path' and 'webcam' cannot be specified at the same time")
-        (self.input_type, self.source) = (
-            ("path", self.path) if self.path else ("webcam", self.webcam)
-        )
-        logging.info(
-            f"Initializing VideoProcessor for input: {self.input_type} (source {self.source})"
-        )
+        logging.info(f"Starting pose estimation (skip_frame={self.skip_frame}).")
 
         # Video capture (local or webcam)
         self.cap = cv2.VideoCapture(self.source)
@@ -153,7 +155,7 @@ class VideoProcessor:
     def _initialize_progress_bar(self):
         pbar = tqdm(
             total=self.frame_count if self.input_type == "path" else None,
-            desc=f"[IN PROGRESS] Body pose estimation: {self.input_type=}, {self.source=}",
+            desc=f"[IN PROGRESS] Body pose estimation: input_type={self.input_type}, source={self.source=}, skip_frame={self.skip_frame}",
             position=0,
             leave=True,
             dynamic_ncols=True,
@@ -169,12 +171,15 @@ class VideoProcessor:
         self.cap.release()
         cv2.destroyAllWindows()
         if not self._terminated:
-            self.frame_count = len(self.processed_frames)
-            # Retain only frames that were not skipped
-            self.normalized_world_landmarks_series = self.normalized_world_landmarks_series[
-                :: self.skip_frame + 1
-            ]
-            skipped_count = self.frame_count - len(self.normalized_world_landmarks_series)
+            self.frame_count = len(self.processed_frames) + 1
+            if self.skip_frame > 0:
+                # Retain only frames that were not skipped
+                self.normalized_world_landmarks_series = self.normalized_world_landmarks_series[
+                    :: self.skip_frame + 1
+                ]
+                skipped_count = self.frame_count - len(self.normalized_world_landmarks_series)
+            else:
+                skipped_count = 0
             logging.info(
                 f"Body pose estimation completed ({self.frame_count} frames of which {skipped_count} skipped, {self.frame_count / self.fps:.2f}s)."
             )

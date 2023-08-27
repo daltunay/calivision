@@ -57,7 +57,6 @@ class PoseEstimationApp:
             model_complexity (int): Model complexity level.
         """
         if not self.pose_estimation_active:
-            logging.info("Starting pose estimation")
             self.joint_series = None  # reset current data
             self.pose_estimator = PoseEstimator(
                 model_complexity, min_detection_confidence, min_tracking_confidence
