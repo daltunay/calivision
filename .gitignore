@@ -39,7 +39,7 @@ env/
 __pycache__/
 
 # Videos
-# *.avi
+*.avi
 *.mp4
 *.mov
 *.mkv
