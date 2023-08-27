@@ -26,6 +26,7 @@ class VideoProcessor:
         pose_estimator: PoseEstimator,
         path: Optional[str] = None,
         webcam: Optional[int] = None,
+        skip_frame: Optional[int] = 0,
         flask: bool = False,
     ) -> None:
         """Initialize the VideoProcessor object.
@@ -35,10 +36,12 @@ class VideoProcessor:
             path (Optional[str]): Path to a local video. Leave as None if using webcam input.
             webcam (Optional[int]): Webcam source (0 or 1). Leave as None if using a video path.
             flask (bool): Whether this is run inside a Flask app or not.
+            skip_frame (int): number of frames to skip between two consecutive processed frames.
         """
         self.pose_estimator: PoseEstimator = pose_estimator
         self.path: Optional[str] = path
         self.webcam: Optional[int] = webcam
+        self.skip_frame: Optional[int] = skip_frame
         self.flask: bool = flask
 
         self.frame_count: Union[int, None] = None
@@ -48,6 +51,8 @@ class VideoProcessor:
         self.base_landmarks_series: List[LandmarkList] = []
         self.processed_frames: List[np.ndarray] = []
         self.annotated_processed_frames: List[np.ndarray] = []
+
+        self._terminated = False
 
     def _process_frame(
         self,
@@ -80,6 +85,7 @@ class VideoProcessor:
             width (Optional[int]): Desired width for resizing.
             height (Optional[int]): Desired height for resizing.
         """
+        self._terminated = False
         # Manage the path and webcam inputs
         if self.path and self.webcam:
             raise ValueError("Both 'path' and 'webcam' cannot be specified at the same time")
@@ -162,10 +168,17 @@ class VideoProcessor:
         self.pbar.close()
         self.cap.release()
         cv2.destroyAllWindows()
-        self.frame_count = len(self.processed_frames)
-        logging.info(
-            f"Body pose estimation completed ({self.frame_count} frames, {self.frame_count / self.fps:.2f}s)."
-        )
+        if not self._terminated:
+            self.frame_count = len(self.processed_frames)
+            # Retain only frames that were not skipped
+            self.normalized_world_landmarks_series = self.normalized_world_landmarks_series[
+                :: self.skip_frame + 1
+            ]
+            skipped_count = self.frame_count - len(self.normalized_world_landmarks_series)
+            logging.info(
+                f"Body pose estimation completed ({self.frame_count} frames of which {skipped_count} skipped, {self.frame_count / self.fps:.2f}s)."
+            )
+        self._terminated = True
 
     @staticmethod
     def _show_landmarks(image: np.ndarray, landmarks: LandmarkList) -> None:

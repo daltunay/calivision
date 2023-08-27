@@ -63,7 +63,7 @@ class PoseEstimationApp:
             )
             self.visibility_threshold = min_detection_confidence
             self.video_processor = VideoProcessor(
-                self.pose_estimator, path=path, webcam=webcam, flask=True
+                self.pose_estimator, path=path, webcam=webcam, skip_frame=10, flask=True
             )
             self.start_estimation_flag = True
             self.pose_estimation_active = True
