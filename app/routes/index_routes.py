@@ -19,12 +19,14 @@ def index():
         if current_app.app_instance.pose_estimation_active:
             current_app.app_instance.terminate_estimation()
         else:
-            source_type = str(request.form["source_type"])  # either 'webcam' or 'upload'
-            if source_type == "webcam":
-                webcam = int(request.form["webcam"])
-                path = None
-                logging.info(f"Reading video input parameters ({source_type=}, {webcam=}")
-            elif source_type == "upload":
+            logging.info("Reading pose estimation parameter values")
+            min_detection_confidence = float(request.form["min_detection_confidence"])
+            min_tracking_confidence = float(request.form["min_tracking_confidence"])
+            model_complexity = int(request.form["model_complexity"])
+            skip_frame = int(request.form["skip_frame"])
+            source_type = str(request.form["source_type"])
+
+            if source_type == "upload":
                 webcam = None
                 upload = request.files["video_upload"]
                 logging.info(
@@ -36,13 +38,10 @@ def index():
                 upload.save(path)
                 logging.info(f"Saved file {upload.filename} to {save_dir}")
 
-            min_detection_confidence = float(request.form["min_detection_confidence"])
-            min_tracking_confidence = float(request.form["min_tracking_confidence"])
-            model_complexity = int(request.form["model_complexity"])
-            skip_frame = int(request.form["skip_frame"])
-            logging.info(
-                f"Reading pose estimation parameter values ({min_detection_confidence=}, {min_tracking_confidence=}, {model_complexity=})"
-            )
+            elif source_type == "webcam":
+                webcam = int(request.form["webcam"])
+                path = None
+                logging.info(f"Reading video input parameters ({source_type=}, {webcam=}")
 
             current_app.app_instance.start_estimation(
                 min_detection_confidence,
