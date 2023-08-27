@@ -39,12 +39,18 @@ def index():
             min_detection_confidence = float(request.form["min_detection_confidence"])
             min_tracking_confidence = float(request.form["min_tracking_confidence"])
             model_complexity = int(request.form["model_complexity"])
+            skip_frame = int(request.form["skip_frame"])
             logging.info(
                 f"Reading pose estimation parameter values ({min_detection_confidence=}, {min_tracking_confidence=}, {model_complexity=})"
             )
 
             current_app.app_instance.start_estimation(
-                min_detection_confidence, min_tracking_confidence, model_complexity, path, webcam
+                min_detection_confidence,
+                min_tracking_confidence,
+                model_complexity,
+                path,
+                webcam,
+                skip_frame,
             )
 
     if current_app.app_instance.pose_estimation_active:

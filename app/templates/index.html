@@ -38,10 +38,16 @@
                 <div class="parameter-section">
                     <label for="model_complexity"><code>model_complexity:</code></label>
                     <select id="model_complexity" name="model_complexity">
-                        <option value="0"><code>0</code></option>
-                        <option value="1" selected><code>1</code></option>
-                        <option value="2"><code>2</code></option>
+                        <option value=0>lite</option>
+                        <option value=1 selected>full</option>
+                        <option value=2>heavy</option>
                     </select>
+                </div>
+
+                <!-- Parameter section for skip frame -->
+                <div class="parameter-section">
+                    <label for="skip_frame"><code>skip_frame:</code></label>
+                    <input type="number" id="skip_frame" name="skip_frame" min="0" step="1" value="0">
                 </div>
             </div>
         </div>
