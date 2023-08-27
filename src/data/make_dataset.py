@@ -89,10 +89,11 @@ class DatasetProcessor:
             pose_estimator=self.pose_estimator,
         )
 
-        video_processor.process_video(show=self.show)
+        for _ in video_processor.process_video(show=self.show):
+            pass
 
         joint_series = JointSeries(
-            landmarks_series=video_processor.landmarks_series, fps=video_processor.fps
+            landmarks_series=video_processor.normalized_world_landmarks_series, fps=video_processor.fps
         )
         joint_series.smooth(smooth_fraction=self.smooth_fraction_joints, inplace=True)
         self.save_dataframe(

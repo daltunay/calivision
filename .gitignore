@@ -57,3 +57,4 @@ __pycache__/
 # Custom
 .mypy_cache/
 .gitignore
+*.pkl
