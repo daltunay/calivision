@@ -110,7 +110,7 @@ class kNNClassifier(ClassifierModel):
             Union[JointSeries, AngleSeries, FourierSeries],
             List[Union[JointSeries, AngleSeries, FourierSeries]],
         ],
-    ) -> List[Dict[str, float]]:
+    ) -> Union[List[Dict[str, float]], Dict[str, float]]:
         """Predict class probabilities for input data points.
 
         Args:

@@ -101,6 +101,7 @@ body {
     color: white;
     padding: 10px 20px;
     text-align: center;
+    margin-top: 10px;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
@@ -270,4 +271,61 @@ code {
 
 .collapsible-header:hover {
     background-color: #0057b3;
+}
+
+/* Add these styles to your existing CSS */
+
+.columns-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.column {
+    border-right: 3px solid #ccc;
+    padding-right: 5px;
+    /* Add some padding to separate content from the line */
+    box-sizing: border-box;
+    /* Include border in the width calculation */
+}
+
+.column:last-child {
+    border-right: none;
+    /* Remove border on the last column */
+    padding-right: 0;
+    /* Remove padding on the last column */
+}
+
+/* Add these styles to your existing CSS */
+
+.prediction-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.prediction-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.class-name {
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.probability-bar {
+    display: inline-block;
+    background-color: #007bff;
+    height: 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.probability {
+    font-size: 16px;
+    color: #555;
 }

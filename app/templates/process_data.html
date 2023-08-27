@@ -4,40 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore Processed Data</title>
+    <title>Processed Data</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
     <div class="main-container">
         <h1 class="page-title">Explore Data</h1>
-        <b>Visualizations and exports</b>
-
         <div class="content-container">
-            <div class="section">
-                <h2 class="section-title">Data: extracted joint coordinates</h2>
-                <div class="vertical-button-group">
-                    <a href="{{ url_for('data_routes.visualize_joints') }}" class="button">See 1 plot</a>
-                    <a href="{{ url_for('data_routes.export_joints') }}" class="button">Export coordinates</a>
+            <div class="columns-container">
+                <div class="column">
+                    <div class="section">
+                        <h2 class="section-title">Extracted joint coordinates</h2>
+                        <div class="vertical-button-group">
+                            <a href="{{ url_for('data_routes.visualize_joints') }}" class="button">See 1 plot</a>
+                            <a href="{{ url_for('data_routes.export_joints') }}" class="button">Export coordinates</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="section">
-                <h2 class="section-title">Data: computed body angles</h2>
-                <div class="vertical-button-group">
-                    <a href="{{ url_for('data_routes.visualize_angles') }}" class="button">See 2 plots</a>
-                    <a href="{{ url_for('data_routes.export_angles') }}" class="button">Export angles</a>
+                <div class="column">
+                    <div class="section">
+                        <h2 class="section-title">Computed body angles</h2>
+                        <div class="vertical-button-group">
+                            <a href="{{ url_for('data_routes.visualize_angles') }}" class="button">See 2 plots</a>
+                            <a href="{{ url_for('data_routes.export_angles') }}" class="button">Export angles</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="section">
-                <h2 class="section-title">Data: angles Fourier transform</h2>
-                <div class="vertical-button-group">
-                    <a href="{{ url_for('data_routes.visualize_fourier') }}" class="button">See 2 plots</a>
-                    <div class="horizontal-button-group">
-                        <a href="{{ url_for('data_routes.export_fourier_magnitude') }}" class="button">Export
-                            magnitude</a>
-                        <a href="{{ url_for('data_routes.export_fourier_phase') }}" class="button">Export phase</a>
+                <div class="column">
+                    <div class="section">
+                        <h2 class="section-title">Angles Fourier transform</h2>
+                        <div class="vertical-button-group">
+                            <a href="{{ url_for('data_routes.visualize_fourier') }}" class="button">See 2 plots</a>
+                            <div class="horizontal-button-group">
+                                <a href="{{ url_for('data_routes.export_fourier_magnitude') }}" class="button">Export
+                                    magnitudes</a>
+                                <a href="{{ url_for('data_routes.export_fourier_phase') }}" class="button">Export
+                                    phases</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -45,17 +50,28 @@
                 <a href="{{ url_for('index_routes.index') }}" class="back-link">Back</a>
             </div>
 
-            <!-- Social media -->
-            <div class="social-links-container">
-                <a class="social-link" href="https://github.com/daltunay/calivision/" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1920px-GitHub_Invertocat_Logo.svg.png"
-                        alt="GitHub">
-                </a>
-                <a class="social-link" href="https://www.linkedin.com/in/daltunay/" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1200px-LinkedIn_icon.svg.png"
-                        alt="LinkedIn">
-                </a>
+            <!-- Predictions -->
+            <div class="section">
+                <h1 class="page-title">Action recognition</h2>
+                    <p>Classifying video among bodyweight exercises</p>
+                    <div class="vertical-button-group">
+                        <a href="{{ url_for('data_routes.action_recognition') }}" class="button">PREDICT</a>
+                    </div>
             </div>
+
+        </div>
+        <div class="social-links-container">
+            <!-- Social media links here -->
+            <a class="social-link" href="https://github.com/daltunay/calivision/" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1920px-GitHub_Invertocat_Logo.svg.png"
+                    alt="GitHub">
+            </a>
+            <a class="social-link" href="https://www.linkedin.com/in/daltunay/" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1200px-LinkedIn_icon.svg.png"
+                    alt="LinkedIn">
+            </a>
+        </div>
+    </div>
 </body>
 
 </html>
