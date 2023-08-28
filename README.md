@@ -17,25 +17,79 @@ git clone https://github.com/daltunay/calivision.git
 
 2. Navigate to the project directory:
 
-```
+```bash
 cd calivision
 ```
 
-3. Install the required Python packages using Poetry:
+3. Activate poetry shell and install dependencies:
 
-```
+```bash
+poetry shell
 poetry install
 ```
 
 ## Usage
 
-To run the main script, use the following command:
+To run web app, do the following:
 
-```
-TBD
+```bash
+cd app
+flask run
 ```
 
 ## Architecture
 
 ```
+┣ 📂app
+┃ ┣ 📂routes
+┃ ┣ 📂saved
+┃ ┣ 📂static
+┃ ┃ ┣ 📂css
+┃ ┃ ┣ 📂img
+┃ ┃ ┣ 📂js
+┃ ┣ 📂templates
+┣ 📂dataset
+┃ ┣ 📂info
+┃ ┣ 📂processed
+┃ ┃ ┣ 📂UCF101
+┃ ┃ ┃ ┣ 📂BodyWeightSquats
+┃ ┃ ┃ ┃ ┣ 📂angles
+┃ ┃ ┃ ┃ ┣ 📂fourier
+┃ ┃ ┃ ┃ ┗ 📂joints
+┃ ┃ ┃ ┣ 📂JumpingJack
+┃ ┃ ┃ ┃ ┣ 📂angles
+┃ ┃ ┃ ┃ ┣ 📂fourier
+┃ ┃ ┃ ┃ ┗ 📂joints
+┃ ┃ ┃ ┣ 📂Lunges
+┃ ┃ ┃ ┃ ┣ 📂angles
+┃ ┃ ┃ ┃ ┣ 📂fourier
+┃ ┃ ┃ ┃ ┗ 📂joints
+┃ ┃ ┃ ┣ 📂PullUps
+┃ ┃ ┃ ┃ ┣ 📂angles
+┃ ┃ ┃ ┃ ┣ 📂fourier
+┃ ┃ ┃ ┃ ┗ 📂joints
+┃ ┃ ┃ ┗ 📂PushUps
+┃ ┃ ┃   ┣ 📂angles
+┃ ┃ ┃   ┣ 📂fourier
+┃ ┃ ┃   ┗ 📂joints
+┃ ┣ 📂raw
+┃ ┃ ┣ 📂UCF101
+┃ ┃ ┃ ┣ 📂BodyWeightSquats
+┃ ┃ ┃ ┣ 📂JumpingJack
+┃ ┃ ┃ ┣ 📂Lunges
+┃ ┃ ┃ ┣ 📂PullUps
+┃ ┃ ┃ ┣ 📂PushUps
+┣ 📂models
+┣ 📂notebooks
+┣ 📂src
+┃ ┣ 📂data
+┃ ┣ 📂distance_metrics
+┃ ┣ 📂features
+┃ ┣ 📂models
+┃ ┣ 📂utils
+┃ ┣ 📂video_processing
+┃ ┣ 📂visualization
+┣ 📜poetry.lock
+┣ 📜pyproject.toml
+┗ 📜README.md
 ```
