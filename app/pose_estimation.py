@@ -83,7 +83,6 @@ class PoseEstimationApp:
         """Terminate the pose estimation process."""
         if self.pose_estimation_active:
             if self.video_processor is not None:
-                logging.info("Terminating pose estimation")
                 self.video_processor._terminate()
                 self.landmarks_series, self.fps = (
                     self.video_processor.normalized_world_landmarks_series,

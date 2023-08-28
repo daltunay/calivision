@@ -9,109 +9,114 @@
 </head>
 
 <body>
-    <div class="main-container">
-        <h1 class="page-title">Explore Data</h1>
+    <h1 class="page-title">Explore Data</h1>
+    <div class="content-container">
+        <div class="columns-container">
+            <div class="column">
+                <div class="section">
+                    <h2 class="section-title">Extracted joint coordinates</h2>
+                    <div class="vertical-button-group">
+                        <a href="{{ url_for('data_routes.visualize_joints') }}" class="button">See 1 plot</a>
+                        <a href="{{ url_for('data_routes.export_joints') }}" class="button">Export coordinates</a>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="section">
+                    <h2 class="section-title">Computed body angles</h2>
+                    <div class="vertical-button-group">
+                        <a href="{{ url_for('data_routes.visualize_angles') }}" class="button">See 2 plots</a>
+                        <a href="{{ url_for('data_routes.export_angles') }}" class="button">Export angles</a>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="section">
+                    <h2 class="section-title">Angles Fourier transform</h2>
+                    <div class="vertical-button-group">
+                        <a href="{{ url_for('data_routes.visualize_fourier') }}" class="button">See 2 plots</a>
+                        <div class="horizontal-button-group">
+                            <a href="{{ url_for('data_routes.export_fourier_magnitude') }}" class="button">Export
+                                magnitudes</a>
+                            <a href="{{ url_for('data_routes.export_fourier_phase') }}" class="button">Export
+                                phases</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="back-link-container">
+            <a href="{{ url_for('index_routes.index') }}" class="back-link">Back</a>
+        </div>
+    </div>
+
+    <!-- Predictions -->
+    <div class="section">
         <div class="content-container">
-            <div class="columns-container">
-                <div class="column">
-                    <div class="section">
-                        <h2 class="section-title">Extracted joint coordinates</h2>
-                        <div class="vertical-button-group">
-                            <a href="{{ url_for('data_routes.visualize_joints') }}" class="button">See 1 plot</a>
-                            <a href="{{ url_for('data_routes.export_joints') }}" class="button">Export coordinates</a>
-                        </div>
+            <h1 class="page-title">[BETA] Action recognition</h2>
+                <p>Classifying video among bodyweight exercises</p>
+                <form action="{{ url_for('data_routes.action_recognition') }}" method="post">
+                    <!-- Parameter section for k -->
+                    <div class="parameter-section">
+                        <label for="k"><code>k:</code></label>
+                        <input type="number" id="k" name="k" min=1 step=2 value=5 style="width: 35px;">
+                        <div class="parameter-tooltip">The value of k to use for the kNN classifier.</div>
                     </div>
-                </div>
-                <div class="column">
-                    <div class="section">
-                        <h2 class="section-title">Computed body angles</h2>
-                        <div class="vertical-button-group">
-                            <a href="{{ url_for('data_routes.visualize_angles') }}" class="button">See 2 plots</a>
-                            <a href="{{ url_for('data_routes.export_angles') }}" class="button">Export angles</a>
-                        </div>
+
+                    <!-- Parameter section for feature type -->
+                    <div class="parameter-section">
+                        <label for="feature_type"><code>feature_type:</code></label>
+                        <select id="feature_type" name="feature_type" onchange="updateMetrics()">
+                            <option value="joints">joints</option>
+                            <option value="angles">angles</option>
+                            <option value="fourier" selected>fourier</option>
+                        </select>
+                        <div class="parameter-tooltip">The type of features to use for the classification (cf. above
+                            section [Explore Data])</div>
                     </div>
-                </div>
-                <div class="column">
-                    <div class="section">
-                        <h2 class="section-title">Angles Fourier transform</h2>
-                        <div class="vertical-button-group">
-                            <a href="{{ url_for('data_routes.visualize_fourier') }}" class="button">See 2 plots</a>
-                            <div class="horizontal-button-group">
-                                <a href="{{ url_for('data_routes.export_fourier_magnitude') }}" class="button">Export
-                                    magnitudes</a>
-                                <a href="{{ url_for('data_routes.export_fourier_phase') }}" class="button">Export
-                                    phases</a>
-                            </div>
-                        </div>
+
+                    <!-- Parameter section for metric -->
+                    <div class="parameter-section">
+                        <label for="metric"><code>metric:</code></label>
+                        <select id="metric" name="metric">
+                            <option value="l1" disabled>l1</option>
+                            <option value="l2" disabled>l2</option>
+                            <option value="dtw" disabled>dtw</option>
+                            <option value="lcss" disabled>lcss</option>
+                            <option value="emd" selected>emd</option>
+                        </select>
+                        <div class="parameter-tooltip">The distance metric to use for the kNN classifier.</div>
                     </div>
-                </div>
-            </div>
-            <div class="back-link-container">
-                <a href="{{ url_for('index_routes.index') }}" class="back-link">Back</a>
-            </div>
 
-            <!-- Predictions -->
-            <div class="section">
-                <h1 class="page-title">[BETA] Action recognition</h2>
-                    <p>Classifying video among bodyweight exercises</p>
-                    <form action="{{ url_for('data_routes.action_recognition') }}" method="post">
-                        <!-- Parameter section for k -->
-                        <div class="parameter-section">
-                            <label for="k"><code>k:</code></label>
-                            <input type="number" id="k" name="k" min=1 step=2 value=5 style="width: 35px;">
-                        </div>
+                    <!-- Parameter section for weights -->
+                    <div class="parameter-section">
+                        <label for="weights"><code>weights:</code></label>
+                        <select id="weights" name="weights">
+                            <option value="uniform" selected>uniform</option>
+                            <option value="distances">distances</option>
+                        </select>
+                        <div class="parameter-tooltip">Whether to use a uniform weighting, or an inverse-distance
+                            weighting.</div>
+                    </div>
 
-                        <!-- Parameter section for feature type -->
-                        <div class="parameter-section">
-                            <label for="feature_type"><code>feature_type:</code></label>
-                            <select id="feature_type" name="feature_type" onchange="updateMetrics()">
-                                <option value="joints">joints</option>
-                                <option value="angles">angles</option>
-                                <option value="fourier" selected>fourier</option>
-                            </select>
-                        </div>
-
-                        <!-- Parameter section for metric -->
-                        <div class="parameter-section">
-                            <label for="metric"><code>metric:</code></label>
-                            <select id="metric" name="metric">
-                                <option value="l1" disabled>l1</option>
-                                <option value="l2" disabled>l2</option>
-                                <option value="dtw" disabled>dtw</option>
-                                <option value="lcss" disabled>lcss</option>
-                                <option value="emd" selected>emd</option>
-                            </select>
-                        </div>
-
-                        <!-- Parameter section for weights -->
-                        <div class="parameter-section">
-                            <label for="weights"><code>weights:</code></label>
-                            <select id="weights" name="weights">
-                                <option value="uniform" selected>uniform</option>
-                                <option value="distances">distances</option>
-                            </select>
-                        </div>
-
-                        <!-- Predict button -->
-                        <div class="vertical-button-group">
-                            <button type="submit" class="button">PREDICT</button>
-                        </div>
-                    </form>
-
-            </div>
-
+                    <!-- Predict button -->
+                    <div class="vertical-button-group">
+                        <button type="submit" class="button">PREDICT</button>
+                    </div>
+                </form>
         </div>
-        <div class="social-links-container">
-            <!-- Social media links here -->
-            <a class="social-link" href="https://github.com/daltunay/calivision/" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1920px-GitHub_Invertocat_Logo.svg.png"
-                    alt="GitHub">
-            </a>
-            <a class="social-link" href="https://www.linkedin.com/in/daltunay/" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1200px-LinkedIn_icon.svg.png"
-                    alt="LinkedIn">
-            </a>
-        </div>
+
+    </div>
+    <div class="social-links-container">
+        <!-- Social media links here -->
+        <a class="social-link" href="https://github.com/daltunay/calivision/" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1920px-GitHub_Invertocat_Logo.svg.png"
+                alt="GitHub">
+        </a>
+        <a class="social-link" href="https://www.linkedin.com/in/daltunay/" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1200px-LinkedIn_icon.svg.png"
+                alt="LinkedIn">
+        </a>
     </div>
 
     <!-- JavaScript -->

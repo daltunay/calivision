@@ -13,7 +13,8 @@
     <h1 class="page-title">CaliVision: Body Pose Estimation</h1>
 
     <!-- Main Form -->
-    <form id="poseEstimationForm" method="POST" enctype="multipart/form-data">
+    <form id="poseEstimationForm" method="POST" enctype="multipart/form-data"
+        action="{{ url_for('index_routes.index') }}">
         <!-- Parameters Section -->
         <div class="section">
             <h2 class="section-title">Parameters</h2>
@@ -81,14 +82,16 @@
                             <label>0</label>
                             <input type="radio" name="webcam" value="1">
                             <label>1</label>
-                            <div class="parameter-tooltip">Webcam to use for the pose estimation. The choice 1 only works if you have 2 webcams on your device.</div>
+                            <div class="parameter-tooltip">Webcam to use for the pose estimation.<br>The choice 1 only
+                                works if you have 2 webcams on your device.</div>
                         </div>
 
                         <!-- Video Input -->
                         <div class="parameter-section clickable-section" id="upload-container">
                             <label><code>video_input:</code></label>
                             <input type="file" name="video_upload" accept="video/*">
-                            <div class="parameter-tooltip">The input to be used for the pose estimation. Video format only.</div>
+                            <div class="parameter-tooltip">The input to be used for the pose estimation. Video format
+                                only.</div>
                         </div>
                     </div>
                 </div>

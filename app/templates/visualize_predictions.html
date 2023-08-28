@@ -9,43 +9,41 @@
 </head>
 
 <body>
-    <div class="main-container">
-        <h1 class="page-title">Visualize Predictions</h1>
-        <div class="content-container">
-            <div class="columns-container">
-                <div class="column">
-                    <div class="section">
-                        <h2 class="section-title">Predicted Classes and Probabilities</h2>
-                        <div class="plot-container">
-                            <ul class="prediction-list">
-                                {% for class_name, probability in predictions.items() %}
-                                <li>
-                                    <span class="class-name">{{ class_name }}</span>
-                                    <span class="probability-bar" style="width: {{ probability * 100 }}%"></span>
-                                    <span class="probability">{{ '%.2f'|format(probability) }}</span>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+    <h1 class="page-title">Visualize Predictions</h1>
+    <div class="content-container">
+        <div class="columns-container">
+            <div class="column">
+                <div class="section">
+                    <h2 class="section-title">Predicted Classes and Probabilities</h2>
+                    <div class="plot-container">
+                        <ul class="prediction-list">
+                            {% for class_name, probability in predictions.items() %}
+                            <li>
+                                <span class="class-name">{{ class_name }}</span>
+                                <span class="probability-bar" style="width: {{ probability * 100 }}%"></span>
+                                <span class="probability">{{ '%.2f'|format(probability) }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="back-link-container">
-                <a href="{{ url_for('index_routes.process_data') }}" class="back-link">Back</a>
-                <a href="{{ url_for('index_routes.index') }}" class="back-link">Home</a>
-            </div>
         </div>
-        <div class="social-links-container">
-            <!-- Social media links here -->
-            <a class="social-link" href="https://github.com/daltunay/calivision/" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1920px-GitHub_Invertocat_Logo.svg.png"
-                    alt="GitHub">
-            </a>
-            <a class="social-link" href="https://www.linkedin.com/in/daltunay/" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1200px-LinkedIn_icon.svg.png"
-                    alt="LinkedIn">
-            </a>
+        <div class="back-link-container">
+            <a href="{{ url_for('index_routes.process_data') }}" class="back-link">Back</a>
+            <a href="{{ url_for('index_routes.index') }}" class="back-link">Home</a>
         </div>
+    </div>
+    <div class="social-links-container">
+        <!-- Social media links here -->
+        <a class="social-link" href="https://github.com/daltunay/calivision/" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1920px-GitHub_Invertocat_Logo.svg.png"
+                alt="GitHub">
+        </a>
+        <a class="social-link" href="https://www.linkedin.com/in/daltunay/" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1200px-LinkedIn_icon.svg.png"
+                alt="LinkedIn">
+        </a>
     </div>
 </body>
 
