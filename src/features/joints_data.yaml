@@ -84,3 +84,9 @@
   first: NOSE
   mid: RIGHT_SHOULDER
   end: RIGHT_HIP
+
+# HEAD ANGLES
+- # Left Shoulder to Right Shoulder
+  first: LEFT_SHOULDER
+  mid: NOSE
+  end: RIGHT_SHOULDER

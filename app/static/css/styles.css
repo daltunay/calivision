@@ -329,3 +329,40 @@ code {
     font-size: 16px;
     color: #555;
 }
+
+/* Tooltip */
+.parameter-section {
+    position: relative;
+}
+
+.parameter-tooltip {
+    position: absolute;
+    bottom: calc(50% - 10px);
+    left: calc(100% + 8px);
+    background-color: #007bff;
+    /* Dark blue background color */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1;
+}
+
+.parameter-section:hover .parameter-tooltip {
+    opacity: 1;
+}
+
+/* Position the tooltip arrow on the right side */
+.parameter-tooltip::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -5px;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-color: transparent transparent transparent #007bff;
+    /* Dark blue arrow color */
+}
