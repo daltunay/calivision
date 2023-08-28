@@ -93,7 +93,8 @@ class DatasetProcessor:
             pass
 
         joint_series = JointSeries(
-            landmarks_series=video_processor.normalized_world_landmarks_series, fps=video_processor.fps
+            landmarks_series=video_processor.normalized_world_landmarks_series,
+            fps=video_processor.fps,
         )
         joint_series.smooth(smooth_fraction=self.smooth_fraction_joints, inplace=True)
         self.save_dataframe(
@@ -102,7 +103,7 @@ class DatasetProcessor:
             smooth_fraction=self.smooth_fraction_joints,
             label=label,
             video_name=video_name,
-            folder_name="joints",
+            feature_type="joints",
         )
 
         angle_series = AngleSeries(joint_series=joint_series)
@@ -113,7 +114,7 @@ class DatasetProcessor:
             smooth_fraction=self.smooth_fraction_angles,
             label=label,
             video_name=video_name,
-            folder_name="angles",
+            feature_type="angles",
         )
 
         fourier_series = FourierSeries(angle_series=angle_series)
@@ -123,7 +124,7 @@ class DatasetProcessor:
             smooth_fraction=None,
             label=label,
             video_name=video_name,
-            folder_name="fourier",
+            feature_type="fourier",
         )
 
     def save_dataframe(
@@ -133,7 +134,7 @@ class DatasetProcessor:
         smooth_fraction: Optional[float],
         label: str,
         video_name: str,
-        folder_name: str,
+        feature_type: str,
     ) -> None:
         """Save DataFrame to file.
 
@@ -143,19 +144,21 @@ class DatasetProcessor:
             smooth_fraction (float): Smoothing fraction used.
             label (str): Label of the video.
             video_name (str): Name of the video.
-            folder_name (str): Name of the folder.
+            feature_type (str): Name of the folder.
         """
         folder_path: str = os.path.join(
-            self.dataset_folder, self.processed_subfolder, dataset_name, label, folder_name
+            self.dataset_folder, self.processed_subfolder, dataset_name, label, feature_type
         )
         os.makedirs(folder_path, exist_ok=True)
         if smooth_fraction is not None:
             file_suffix = f"smooth_{int(smooth_fraction * 100):02d}"
         else:
             file_suffix = ""
-        file_path: str = os.path.join(folder_path, f"{video_name}_{folder_name}_{file_suffix}.pkl")
+        file_path: str = os.path.join(
+            folder_path, f"{os.path.splitext(video_name)[0]}_{feature_type}_{file_suffix}.pkl"
+        )
         dataframe.to_pickle(file_path)
-        logging.info(f"Saving computed {folder_name} data to: {file_path}")
+        logging.info(f"Saving computed {feature_type} data to: {file_path}")
         return None
 
 

@@ -1,4 +1,16 @@
-from flask import Blueprint, Response, current_app
+from flask import Blueprint, Response, current_app, request
+from src.distance_metrics import DistanceMetric, L1, L2, DTW, LCSS, EMD
+from typing import Dict
+import logging
+from ..action_prediction import ActionRecognitionApp
+
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
 
 data_routes = Blueprint("data_routes", __name__)
 
@@ -48,10 +60,37 @@ def export_fourier_phase():
     return current_app.pose_estimation_app_instance.export_fourier_phase()
 
 
-@data_routes.route("/action_recognition")
+@data_routes.route("/action_recognition", methods=["POST"])
 def action_recognition():
+    DISTANCE_METRICS: Dict[str, DistanceMetric] = {
+        "l1": L1,
+        "l2": L2,
+        "dtw": DTW,
+        "lcss": LCSS,
+        "emd": EMD,
+    }
+
     """Route to predict the bodyweight exercise."""
-    current_app.action_recognition_app_instance.predict(
-        current_app.pose_estimation_app_instance.angle_series
+    k = int(request.form["k"])
+    feature_type = str(request.form["feature_type"])
+    metric = str(request.form["metric"])
+    metric = DISTANCE_METRICS[metric]
+
+    action_recognition_app_instance = ActionRecognitionApp(
+        model_name=f"UCF101_knn_{feature_type}_model.pth"
     )
+    current_app.action_recognition_app_instance = action_recognition_app_instance
+
+    current_app.action_recognition_app_instance.model.k = k
+    current_app.action_recognition_app_instance.model.feature_type = feature_type
+    current_app.action_recognition_app_instance.model.metric = metric()
+
+    if feature_type == "joints":
+        X = current_app.pose_estimation_app_instance.joint_series
+    elif feature_type == "angles":
+        X = current_app.pose_estimation_app_instance.angle_series
+    elif feature_type == "fourier":
+        X = current_app.pose_estimation_app_instance.fourier_series
+
+    current_app.action_recognition_app_instance.predict(X)
     return current_app.action_recognition_app_instance.visualize_predictions()

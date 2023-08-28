@@ -4,9 +4,9 @@ import logging
 from flask import Response, render_template
 import torch
 import os
-from typing import Dict
+from typing import Dict, Union
 
-from src.features import AngleSeries
+from src.features import JointSeries, AngleSeries, FourierSeries
 from src.models import kNNClassifier
 
 # Set up logging
@@ -27,8 +27,8 @@ class ActionRecognitionApp:
         )
         self.predictions: Dict[str, float] = {}
 
-    def predict(self, angle_series: AngleSeries):
-        self.predictions = self.model.predict_probas(angle_series)
+    def predict(self, X: Union[JointSeries, AngleSeries, FourierSeries]):
+        self.predictions = self.model.predict_probas(X)
 
     def visualize_predictions(self):
         if self.predictions is None:

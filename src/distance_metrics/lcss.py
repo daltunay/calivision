@@ -9,11 +9,11 @@ from .distance_metric import DistanceMetric
 class LCSS(DistanceMetric):
     name: str = "LCSS"
 
-    def __init__(self, epsilon: float = 1_000):
+    def __init__(self, epsilon: float = 1e-1):
         """Initialize an LCSS distance metric calculator.
 
         Args:
-            epsilon (float, optional): A parameter controlling the matching tolerance. Default is 1000.
+            epsilon (float, optional): A parameter controlling the matching tolerance. Default is 1e-2.
         """
         super().__init__()
         self.epsilon: float = epsilon

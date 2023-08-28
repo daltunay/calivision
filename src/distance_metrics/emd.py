@@ -3,6 +3,7 @@ from scipy.stats import wasserstein_distance
 
 from ..features import FourierSeries
 from .distance_metric import DistanceMetric
+import numpy as np
 
 
 class EMD(DistanceMetric):

@@ -2,8 +2,9 @@ import logging
 import operator
 from collections import Counter
 from typing import Dict, List, Literal, Tuple, Union
+import numpy as np
 
-from ..distance_metrics.distance_metric import DistanceMetric
+from ..distance_metrics import DistanceMetric, L1, L2, DTW, LCSS, EMD
 from ..features import AngleSeries, FourierSeries, JointSeries
 from .model import ClassifierModel
 
@@ -14,13 +15,21 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
+DISTANCE_METRICS: Dict[str, DistanceMetric] = {
+    "l1": L1,
+    "l2": L2,
+    "dtw": DTW,
+    "lcss": LCSS,
+    "emd": EMD,
+}
+
 
 class kNNClassifier(ClassifierModel):
     def __init__(
         self,
         feature_type: Literal["joints", "angles", "fourier"],
         k: int,
-        metric: DistanceMetric,
+        metric: Union[str, DistanceMetric],
         metric_params: dict = None,
         weights: Literal["uniform", "distance"] = "uniform",
     ) -> None:
@@ -28,7 +37,7 @@ class kNNClassifier(ClassifierModel):
 
         Args:
             k (int): Number of nearest neighbors to consider.
-            metric (Callable): Distance metric function to compute distances between data points.
+            metric (Union[str, Callable]): Distance metric function to compute distances between data points.
             weights (Literal["uniform", "distance"]): Weighting method for predictions.
         """
         logging.info(f"Initializing kNN classifier ({k=}, metric={metric.name}, {weights=})")
@@ -36,6 +45,8 @@ class kNNClassifier(ClassifierModel):
         self.train_data: List[Union[JointSeries, AngleSeries, FourierSeries]] = None
         self.train_labels: List[str] = None
         self.all_labels: Dict[str] = {}
+        if isinstance(metric, str):
+            metric = DISTANCE_METRICS[metric]
         self.metric: DistanceMetric = metric(**metric_params) if metric_params else metric()
         self.weights: Literal["uniform", "distance"] = weights
 
@@ -65,10 +76,14 @@ class kNNClassifier(ClassifierModel):
         Returns:
             List[Tuple[str, int]]: List of (label, distance) tuples for nearest neighbors.
         """
-        distances_and_labels = [
-            (neighbor_label, self.metric.compute_distance(series_1=_x, series_2=neighbor))
-            for neighbor, neighbor_label in zip(self.train_data, self.train_labels)
-        ]
+        distances_and_labels = []
+        for neighbor, neighbor_label in zip(self.train_data, self.train_labels):
+            try:
+                neighbor_distance = self.metric.compute_distance(series_1=_x, series_2=neighbor)
+            except:
+                neighbor_distance = np.inf
+            distances_and_labels.append((neighbor_label, neighbor_distance))
+
         distances_and_labels.sort(key=operator.itemgetter(1))
         return distances_and_labels[: self.k]
 
@@ -146,5 +161,5 @@ class kNNClassifier(ClassifierModel):
             }
 
             probas.append(prediction_probs)
-
+        logging.info(prediction_probs)
         return probas[0] if single_input else probas

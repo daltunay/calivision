@@ -54,9 +54,41 @@
             <div class="section">
                 <h1 class="page-title">Action recognition</h2>
                     <p>Classifying video among bodyweight exercises</p>
-                    <div class="vertical-button-group">
-                        <a href="{{ url_for('data_routes.action_recognition') }}" class="button">PREDICT</a>
-                    </div>
+                    <form action="{{ url_for('data_routes.action_recognition') }}" method="post">
+                        <!-- Parameter section for k -->
+                        <div class="parameter-section">
+                            <label for="k"><code>k:</code></label>
+                            <input type="number" id="k" name="k" min=1 step=2 value=5 style="width: 35px;">
+                        </div>
+
+                        <!-- Parameter section for feature type -->
+                        <div class="parameter-section">
+                            <label for="feature_type"><code>feature_type:</code></label>
+                            <select id="feature_type" name="feature_type" onchange="updateMetrics()">
+                                <option value="joints">joints</option>
+                                <option value="angles">angles</option>
+                                <option value="fourier">fourier</option>
+                            </select>
+                        </div>
+
+                        <!-- Parameter section for metric -->
+                        <div class="parameter-section">
+                            <label for="metric"><code>metric:</code></label>
+                            <select id="metric" name="metric">
+                                <option value="l1">l1</option>
+                                <option value="l2">l2</option>
+                                <option value="dtw" disabled>dtw</option>
+                                <option value="lcss" disabled>lcss</option>
+                                <option value="emd" disabled>emd</option>
+                            </select>
+                        </div>
+
+                        <!-- Predict button -->
+                        <div class="vertical-button-group">
+                            <button type="submit" class="button">PREDICT</button>
+                        </div>
+                    </form>
+
             </div>
 
         </div>
@@ -72,6 +104,14 @@
             </a>
         </div>
     </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/process_data.js') }}">
+        // Call the updateMetrics() function on page load
+        window.addEventListener('load', function () {
+            updateMetrics();
+        });
+    </script>
 </body>
 
 </html>

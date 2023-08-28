@@ -9,6 +9,10 @@ from .distance_metric import DistanceMetric
 class L2(DistanceMetric):
     name: str = "L2"
 
+    def __init__(self):
+        super().__init__()
+        self.name: str = "L2"
+
     def compute_distance(
         self,
         series_1: Union[AngleSeries, JointSeries, FourierSeries],
