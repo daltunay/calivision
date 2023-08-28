@@ -9,6 +9,12 @@ Bodyweight exercise classification via body pose estimation and k-NN.
 
 ## Setup
 
+0. (Optional) Install poetry:
+
+```bash
+pip install poetry
+```
+
 1. Clone this repository:
 
 ```bash
