@@ -121,12 +121,10 @@
     <!-- Social media -->
     <div class="social-links-container">
         <a class="social-link" href="https://github.com/daltunay/calivision/" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1920px-GitHub_Invertocat_Logo.svg.png"
-                alt="GitHub">
+            <img src="{{ url_for('static', filename='img/github_logo.png') }}" alt="GitHub">
         </a>
         <a class="social-link" href="https://www.linkedin.com/in/daltunay/" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1200px-LinkedIn_icon.svg.png"
-                alt="LinkedIn">
+            <img src="{{ url_for('static', filename='img/linkedin_logo.png') }}" alt="LinkedIn">
         </a>
     </div>
 
@@ -134,7 +132,7 @@
     <div class="collapsible-panel">
         <div class="collapsible-header" onclick="toggleCollapsiblePanel()">Mediapipe landmarks</div>
         <div class="collapsible-content">
-            <img src="https://developers.google.com/static/mediapipe/images/solutions/pose_landmarks_index.png"
+            <img src="{{ url_for('static', filename='img/mediapipe_landmarks.png') }}"
                 alt="Mediapipe Landmarks" style="max-width: 100%;">
         </div>
     </div>
