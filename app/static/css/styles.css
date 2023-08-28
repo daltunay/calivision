@@ -338,7 +338,7 @@ code {
 .parameter-tooltip {
     position: absolute;
     bottom: calc(50% - 10px);
-    left: calc(100% + 8px);
+    right: calc(100% + 20px); /* Position to the right of the labels */
     background-color: #007bff;
     /* Dark blue background color */
     color: white;

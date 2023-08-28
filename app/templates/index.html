@@ -24,7 +24,8 @@
                     <input class="slider" type="range" id="min_detection_confidence" name="min_detection_confidence"
                         min="0" max="1" step="0.05" value="0.75" onchange="updateMinDetectionConfidence(this.value)">
                     <span id="min_detection_value"><code>0.75</code></span>
-                    <div class="parameter-tooltip">Adjust the confidence threshold for initial pose detection.</div>
+                    <div class="parameter-tooltip">The minimum confidence score for the pose detection to be considered
+                        successful. </div>
                 </div>
 
                 <!-- Parameter section for minimum tracking confidence -->
@@ -33,7 +34,8 @@
                     <input class="slider" type="range" id="min_tracking_confidence" name="min_tracking_confidence"
                         min="0" max="1" step="0.05" value="0.75" onchange="updateMinTrackingConfidence(this.value)">
                     <span id="min_tracking_value"><code>0.75</code></span>
-                    <div class="parameter-tooltip">Adjust the confidence threshold for tracking detected poses.</div>
+                    <div class="parameter-tooltip">The minimum confidence score for the pose tracking to be considered
+                        successful.</div>
                 </div>
 
                 <!-- Parameter section for model complexity -->
@@ -44,7 +46,8 @@
                         <option value=1 selected>full</option>
                         <option value=2>heavy</option>
                     </select>
-                    <div class="parameter-tooltip">Choose the complexity of the pose estimation model.</div>
+                    <div class="parameter-tooltip">Complexity of the pose landmark model.<br>Landmark accuracy as well
+                        as inference latency generally go up with the model complexity.</div>
                 </div>
 
                 <!-- Parameter section for skip frame -->
@@ -52,7 +55,8 @@
                     <label for="skip_frame"><code>skip_frame:</code></label>
                     <input type="number" id="skip_frame" name="skip_frame" min="0" step="1" value="0"
                         style="width: 35px;">
-                    <div class="parameter-tooltip">Specify the number of frames to skip during processing.</div>
+                    <div class="parameter-tooltip">Number of frames to skip between two consecutive processed frames.
+                    </div>
                 </div>
 
                 <!-- Video Source Section -->
@@ -66,7 +70,8 @@
                             <label>Webcam</label>
                             <input type="radio" name="source_type" value="upload" onchange="handleSourceChange()">
                             <label>Upload</label>
-                            <div class="parameter-tooltip">Select the video source for pose estimation.</div>
+                            <div class="parameter-tooltip">Whether to use the device webcam or an uploaded video for the
+                                pose estimation.</div>
                         </div>
 
                         <!-- Webcam Input -->
@@ -76,18 +81,26 @@
                             <label>0</label>
                             <input type="radio" name="webcam" value="1">
                             <label>1</label>
-                            <div class="parameter-tooltip">Choose the webcam input to use for pose estimation.</div>
+                            <div class="parameter-tooltip">Webcam to use for the pose estimation. The choice 1 only works if you have 2 webcams on your device.</div>
                         </div>
 
                         <!-- Video Input -->
                         <div class="parameter-section clickable-section" id="upload-container">
                             <label><code>video_input:</code></label>
                             <input type="file" name="video_upload" accept="video/*">
-                            <div class="parameter-tooltip">Choose a video file to upload for pose estimation.</div>
+                            <div class="parameter-tooltip">The input to be used for the pose estimation. Video format only.</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Action and Process Button Section -->
+                <div class="section">
+                    <h2 class="section-title">Pose Estimation</h2>
+                    <div class="vertical-button-group">
+                        <!-- Action button -->
+                        <input class="button-disabled" type="submit" value="{{ action_button_text }}" id="actionButton"
+                            disabled>
+                    </div>
     </form>
     <!-- Form for processing data -->
     <form method="GET" action="{{ url_for('index_routes.process_data') }}">
