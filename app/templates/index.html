@@ -93,7 +93,7 @@
             </div>
     </form>
     <!-- Form for processing data -->
-    <form method="GET" action="/process_data">
+    <form method="GET" action="{{ url_for('index_routes.process_data') }}">
         <!-- Process data button -->
         <input class="button{{ ' button-disabled' if process_button_disabled else '' }}" type="submit"
             value="PROCESS DATA" {{ process_button_disabled }}>
