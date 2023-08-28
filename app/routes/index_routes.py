@@ -4,6 +4,8 @@ index_routes = Blueprint("index_routes", __name__)
 
 import logging
 import os
+import shutil
+
 
 # Set up logging
 logging.basicConfig(
@@ -33,6 +35,7 @@ def index():
                     f"Reading video input parameters ({source_type=}, {upload.filename=})"
                 )
                 save_dir = os.path.join(current_app.root_path, "saved")
+                shutil.rmtree(save_dir)
                 os.makedirs(save_dir, exist_ok=True)
                 path = os.path.join(save_dir, upload.filename)
                 upload.save(path)

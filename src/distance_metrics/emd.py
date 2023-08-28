@@ -28,9 +28,14 @@ class EMD(DistanceMetric):
 
         magnitude_1 = series_1.magnitude
         magnitude_2 = series_2.magnitude
-
-        emd_distance = 0.0
+        emd_magnitude_distance = 0.0
         for col in magnitude_1.columns:
-            emd_distance += wasserstein_distance(magnitude_1[col], magnitude_2[col])
+            emd_magnitude_distance += wasserstein_distance(magnitude_1[col], magnitude_2[col])
 
-        return emd_distance
+        phase_1 = series_1.phase
+        phase_2 = series_2.phase
+        emd_phase_distance = 0.0
+        for col in phase_1.columns:
+            emd_phase_distance += wasserstein_distance(phase_1[col], phase_2[col])
+
+        return emd_magnitude_distance + emd_phase_distance

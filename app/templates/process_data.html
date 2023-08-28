@@ -52,7 +52,7 @@
 
             <!-- Predictions -->
             <div class="section">
-                <h1 class="page-title">Action recognition</h2>
+                <h1 class="page-title">[BETA] Action recognition</h2>
                     <p>Classifying video among bodyweight exercises</p>
                     <form action="{{ url_for('data_routes.action_recognition') }}" method="post">
                         <!-- Parameter section for k -->
@@ -67,7 +67,7 @@
                             <select id="feature_type" name="feature_type" onchange="updateMetrics()">
                                 <option value="joints">joints</option>
                                 <option value="angles">angles</option>
-                                <option value="fourier">fourier</option>
+                                <option value="fourier" selected>fourier</option>
                             </select>
                         </div>
 
@@ -75,11 +75,11 @@
                         <div class="parameter-section">
                             <label for="metric"><code>metric:</code></label>
                             <select id="metric" name="metric">
-                                <option value="l1">l1</option>
-                                <option value="l2">l2</option>
+                                <option value="l1" disabled>l1</option>
+                                <option value="l2" disabled>l2</option>
                                 <option value="dtw" disabled>dtw</option>
                                 <option value="lcss" disabled>lcss</option>
-                                <option value="emd" disabled>emd</option>
+                                <option value="emd" selected>emd</option>
                             </select>
                         </div>
 

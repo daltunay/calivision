@@ -101,12 +101,12 @@ class PoseEstimationApp:
         logging.info("Processing pose estimation data")
         if self.joint_series is None:
             self.joint_series = JointSeries(landmarks_series=self.landmarks_series, fps=self.fps)
-            self.joint_series.smooth(smooth_fraction=0.1, inplace=True)
+            self.joint_series.smooth(smooth_fraction=0.05, inplace=True)
 
             self.angle_series = AngleSeries(joint_series=self.joint_series)
-            self.angle_series.smooth(smooth_fraction=0.1, inplace=True)
+            self.angle_series.smooth(smooth_fraction=0.05, inplace=True)
 
-            self.fourier_series = FourierSeries(angle_series=self.angle_series, dc_offset=True)
+            self.fourier_series = FourierSeries(angle_series=self.angle_series, dc_offset=False)
 
     def visualize_joints(self):
         """Visualize the joint data."""
