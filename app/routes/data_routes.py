@@ -75,6 +75,7 @@ def action_recognition():
     feature_type = str(request.form["feature_type"])
     metric = str(request.form["metric"])
     metric = DISTANCE_METRICS[metric]
+    weights = str(request.form["weights"])
 
     action_recognition_app_instance = ActionRecognitionApp(
         model_name=f"UCF101_knn_{feature_type}_model.pth"
@@ -84,6 +85,7 @@ def action_recognition():
     current_app.action_recognition_app_instance.model.k = k
     current_app.action_recognition_app_instance.model.feature_type = feature_type
     current_app.action_recognition_app_instance.model.metric = metric()
+    current_app.action_recognition_app_instance.model.weights = weights
 
     if feature_type == "joints":
         X = current_app.pose_estimation_app_instance.joint_series
