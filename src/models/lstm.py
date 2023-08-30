@@ -1,5 +1,5 @@
 import logging
-from typing import List, Literal, Union
+from typing import List, Literal, Union, Dict
 
 import torch
 import torch.nn as nn
@@ -29,6 +29,7 @@ class LSTMModel(nn.Module):
 
     def __init__(
         self,
+        feature_type: Literal["joints", "angles", "fourier"],
         num_classes: int,
         input_size: int,
         hidden_size: int,
@@ -43,6 +44,7 @@ class LSTMModel(nn.Module):
             num_layers (int): Number of LSTM layers.
         """
         super(LSTMModel, self).__init__()
+        self.feature_type: Literal["joints", "angles", "fourier"] = feature_type
         self.num_classes = num_classes
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -93,6 +95,7 @@ class LSTMClassifier(ClassifierModel):
         logging.info(
             f"Initializing LSTM classifier ({hidden_size=}, {num_layers=}, {num_epochs=}, {batch_size=}, {learning_rate=})"
         )
+        self.feature_type = feature_type
         super().__init__(model_type="lstm", feature_type=self.feature_type)
         self.num_classes = num_classes
         self.input_size = input_size
@@ -105,7 +108,7 @@ class LSTMClassifier(ClassifierModel):
         self.label_encoder = LabelEncoder()
 
         self.criterion = nn.CrossEntropyLoss()
-        self.model = LSTMModel(num_classes, input_size, hidden_size, num_layers)
+        self.model = LSTMModel(feature_type, num_classes, input_size, hidden_size, num_layers)
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
 
     def _convert_to_tensors(self, X: List[Union[JointSeries, AngleSeries]]) -> torch.Tensor:
@@ -211,14 +214,14 @@ class LSTMClassifier(ClassifierModel):
                 predictions.append(predicted_labels[0])
         return predictions[0] if single_input else predictions
 
-    def predict_probas(self, X: List[Union[JointSeries, AngleSeries]]) -> List[List[float]]:
+    def predict_probas(self, X: List[Union[JointSeries, AngleSeries]]) -> List[Dict[str, float]]:
         """Predict class probabilities for input data.
 
         Args:
             X (List[Union[JointSeries, AngleSeries]]): Input data.
 
         Returns:
-            List[List[float]]: List of predicted class probabilities.
+            List[Dict[str, float]]: List of dictionaries containing class probabilities.
         """
         if not isinstance(X, list):
             single_input = True
@@ -233,5 +236,9 @@ class LSTMClassifier(ClassifierModel):
             for x in data_tensors:
                 output = self.model(x.unsqueeze(0))
                 predicted_probs = softmax(output)
-                probas.append(predicted_probs[0].tolist())
-        return probas if single_input else probas
+                class_probabilities = {
+                    label: prob.item()
+                    for label, prob in zip(self.label_encoder.classes_, predicted_probs[0])
+                }
+                probas.append(class_probabilities)
+        return probas[0] if single_input else probas

@@ -56,6 +56,17 @@
             <h1 class="page-title">[BETA] Action recognition</h2>
                 <p>Classifying video among bodyweight exercises</p>
                 <form action="{{ url_for('data_routes.action_recognition') }}" method="post">
+                    <!-- Parameter section for model type -->
+                    <div class="parameter-section">
+                        <label for="model_type"><code>model_type:</code></label>
+                        <select id="model_type" name="model_type" onchange="updateParameters()">
+                            <option value="knn" selected>knn</option>
+                            <option value="lstm">lstm</option>
+                        </select>
+                        <div class="parameter-tooltip">The type of model to use for the classification<br>(either K-nearest
+                            neighbors or Long Short Term Memory classifier)</div>
+                    </div>
+
                     <!-- Parameter section for k -->
                     <div class="parameter-section">
                         <label for="k"><code>k:</code></label>

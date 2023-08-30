@@ -79,7 +79,7 @@ class ClassifierTrainer:
         # Save the trained LSTM model
         model_filename = f"{self.dataset_name}_lstm_{self.feature_type}_model.pth"
         model_path = os.path.join("models/", model_filename)
-        torch.save(lstm.model.state_dict(), model_path)
+        torch.save(lstm, model_path)
         logging.info(f"Trained LSTM model saved to: {model_path}")
 
     def train_knn(

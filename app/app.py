@@ -1,7 +1,6 @@
 from flask import Flask
 
 from .pose_estimation import PoseEstimationApp
-from .action_prediction import ActionRecognitionApp
 from .routes import data_routes, index_routes
 
 app = Flask(__name__)

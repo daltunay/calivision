@@ -7,7 +7,7 @@ import os
 from typing import Dict, Union
 
 from src.features import JointSeries, AngleSeries, FourierSeries
-from src.models import kNNClassifier
+from src.models import kNNClassifier, LSTMClassifier
 
 # Set up logging
 logging.basicConfig(
@@ -22,9 +22,10 @@ class ActionRecognitionApp:
 
     def __init__(self, model_name):
         """Initialize the app instance with necessary attributes."""
-        self.model: kNNClassifier = torch.load(
+        self.model: Union[kNNClassifier, LSTMClassifier] = torch.load(
             os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", model_name)
         )
+        logging.info(self.model)
         self.predictions: Dict[str, float] = {}
 
     def predict(self, X: Union[JointSeries, AngleSeries, FourierSeries]):

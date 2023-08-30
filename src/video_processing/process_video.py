@@ -163,13 +163,15 @@ class VideoProcessor:
         return pbar
 
     def _terminate(self):
-        cv2.waitKey(1)
+        cv2.waitKey(10)
+        cv2.destroyAllWindows()
+        cv2.waitKey(10)
+        self.cap.release()
+        cv2.waitKey(10)
         self.pbar.set_description(
             f"[DONE] Body pose estimation: {self.input_type=}, {self.source=}"
         )
         self.pbar.close()
-        self.cap.release()
-        cv2.destroyAllWindows()
         if not self._terminated:
             self.frame_count = len(self.processed_frames) + 1
             if self.skip_frame > 0:

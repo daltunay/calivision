@@ -338,7 +338,8 @@ code {
 .parameter-tooltip {
     position: absolute;
     bottom: calc(50% - 10px);
-    right: calc(100% + 10px); /* Position to the right of the labels */
+    right: calc(100% + 10px);
+    /* Position to the right of the labels */
     background-color: #007bff;
     /* Dark blue background color */
     color: white;
@@ -353,4 +354,11 @@ code {
 
 .parameter-section:hover .parameter-tooltip {
     opacity: 0.5;
+}
+
+/* Example CSS for visually disabled labels */
+.disabled {
+    color: #999;
+    /* Set a color appropriate for disabled state */
+    /* You can also style the label with a different background, font style, etc. */
 }

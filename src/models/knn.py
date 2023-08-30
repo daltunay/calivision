@@ -41,6 +41,7 @@ class kNNClassifier(ClassifierModel):
             weights (Literal["uniform", "distance"]): Weighting method for predictions.
         """
         logging.info(f"Initializing kNN classifier ({k=}, metric={metric.name}, {weights=})")
+        self.feature_type: Literal["joints", "angles", "fourier"] = feature_type
         self.k: int = k
         self.train_data: List[Union[JointSeries, AngleSeries, FourierSeries]] = None
         self.train_labels: List[str] = None

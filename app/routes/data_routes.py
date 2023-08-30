@@ -71,21 +71,22 @@ def action_recognition():
     }
 
     """Route to predict the bodyweight exercise."""
-    k = int(request.form["k"])
+    model_type = str(request.form["model_type"])
     feature_type = str(request.form["feature_type"])
-    metric = str(request.form["metric"])
-    metric = DISTANCE_METRICS[metric]
-    weights = str(request.form["weights"])
+    if model_type == "knn":
+        k = int(request.form["k"])
+        metric = str(request.form["metric"])
+        metric = DISTANCE_METRICS[metric]
+        weights = str(request.form["weights"])
+        current_app.action_recognition_app_instance.model.k = k
+        current_app.action_recognition_app_instance.model.feature_type = feature_type
+        current_app.action_recognition_app_instance.model.metric = metric()
+        current_app.action_recognition_app_instance.model.weights = weights
 
     action_recognition_app_instance = ActionRecognitionApp(
-        model_name=f"UCF101_knn_{feature_type}_model.pth"
+        model_name=f"UCF101_{model_type}_{feature_type}_model.pth"
     )
     current_app.action_recognition_app_instance = action_recognition_app_instance
-
-    current_app.action_recognition_app_instance.model.k = k
-    current_app.action_recognition_app_instance.model.feature_type = feature_type
-    current_app.action_recognition_app_instance.model.metric = metric()
-    current_app.action_recognition_app_instance.model.weights = weights
 
     if feature_type == "joints":
         X = current_app.pose_estimation_app_instance.joint_series
