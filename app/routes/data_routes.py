@@ -73,6 +73,12 @@ def action_recognition():
     """Route to predict the bodyweight exercise."""
     model_type = str(request.form["model_type"])
     feature_type = str(request.form["feature_type"])
+
+    action_recognition_app_instance = ActionRecognitionApp(
+        model_name=f"UCF101_{model_type}_{feature_type}_model.pth"
+    )
+
+    current_app.action_recognition_app_instance = action_recognition_app_instance
     if model_type == "knn":
         k = int(request.form["k"])
         metric = str(request.form["metric"])

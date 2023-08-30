@@ -25,7 +25,6 @@ class ActionRecognitionApp:
         self.model: Union[kNNClassifier, LSTMClassifier] = torch.load(
             os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", model_name)
         )
-        logging.info(self.model)
         self.predictions: Dict[str, float] = {}
 
     def predict(self, X: Union[JointSeries, AngleSeries, FourierSeries]):
