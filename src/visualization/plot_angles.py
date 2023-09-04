@@ -17,9 +17,10 @@ def visible_angles_only(angle_frame, visibility_threshold):
     visibility_frame = (
         angle_frame._joint_series.loc[:, (slice(None), "visibility")]
         .droplevel(level=1, axis=1)
-        .applymap(lambda visibility: visibility > visibility_threshold)
+        .map(lambda visibility: visibility > visibility_threshold)
     )
 
+    angle_frame_copy = angle_frame.copy()
     # Remove angles with non-visible joints
     for timestamp in angle_frame.index:
         for col in angle_frame.columns:
@@ -32,8 +33,8 @@ def visible_angles_only(angle_frame, visibility_threshold):
                 or not visibility_frame.loc[timestamp, end_joint]
             ):
                 # Set the angle value to NaN for this timestamp and column
-                angle_frame.loc[timestamp, col] = None
-    return angle_frame
+                angle_frame_copy.loc[timestamp, col] = None
+    return angle_frame_copy
 
 
 def plot_angle_evolution(angle_frame: AngleSeries, visibility_threshold: float = 0.5) -> go.Figure:

@@ -1,13 +1,12 @@
 import json
 import logging
-
-from flask import Response, render_template
-import torch
 import os
 from typing import Dict, Union
 
-from src.features import JointSeries, AngleSeries, FourierSeries
-from src.models import kNNClassifier, LSTMClassifier
+import torch
+from flask import Response, render_template
+from src.features import AngleSeries, FourierSeries, JointSeries
+from src.models import LSTMClassifier, kNNClassifier
 
 # Set up logging
 logging.basicConfig(

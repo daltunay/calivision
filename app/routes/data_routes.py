@@ -1,9 +1,10 @@
-from flask import Blueprint, Response, current_app, request
-from src.distance_metrics import DistanceMetric, L1, L2, DTW, LCSS, EMD
-from typing import Dict
 import logging
-from ..action_prediction import ActionRecognitionApp
+from typing import Dict
 
+from flask import Blueprint, Response, current_app, request
+from src.distance_metrics import DTW, EMD, L1, L2, LCSS, DistanceMetric
+
+from ..action_prediction import ActionRecognitionApp
 
 # Set up logging
 logging.basicConfig(

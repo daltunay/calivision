@@ -6,7 +6,6 @@ import logging
 import os
 import shutil
 
-
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
