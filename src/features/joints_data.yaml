@@ -1,92 +1,132 @@
-# List of joint angles for action recognition using Mediapipe body landmarks
-
 # ARM ANGLES
-- # Left arm: Shoulder to Wrist
+- # Left arm: Shoulder to Wrist Flexion
   first: LEFT_SHOULDER
   mid: LEFT_ELBOW
   end: LEFT_WRIST
 
-- # Left arm: Elbow to Hip
+- # Left arm: Elbow to Hip Extension
   first: LEFT_ELBOW
   mid: LEFT_SHOULDER
   end: LEFT_HIP
 
-- # Left arm: Shoulder to Knee
+- # Left arm: Shoulder to Knee Extension
   first: LEFT_SHOULDER
   mid: LEFT_HIP
   end: LEFT_KNEE
 
-- # Left arm: Elbow to Right Elbow
+- # Left arm: Elbow to Right Elbow Flexion
   first: LEFT_ELBOW
   mid: NOSE
   end: RIGHT_ELBOW
 
-- # Right arm: Shoulder to Wrist
+- # Right arm: Shoulder to Wrist Flexion
   first: RIGHT_SHOULDER
   mid: RIGHT_ELBOW
   end: RIGHT_WRIST
 
-- # Right arm: Elbow to Hip
+- # Right arm: Elbow to Hip Extension
   first: RIGHT_ELBOW
   mid: RIGHT_SHOULDER
   end: RIGHT_HIP
 
-- # Right arm: Shoulder to Knee
+- # Right arm: Shoulder to Knee Extension
   first: RIGHT_SHOULDER
   mid: RIGHT_HIP
   end: RIGHT_KNEE
 
-- # Right arm: Elbow to Left Elbow
+- # Right arm: Elbow to Left Elbow Flexion
   first: RIGHT_ELBOW
   mid: NOSE
   end: LEFT_ELBOW
 
 # HIP ANGLES
-- # Hip shift: Left Hip to Right Shoulder
+- # Hip shift: Left Hip to Right Shoulder Abduction
   first: LEFT_HIP
   mid: RIGHT_SHOULDER
   end: LEFT_SHOULDER
 
-- # Hip shift: Right Hip to Left Shoulder
+- # Hip shift: Right Hip to Left Shoulder Abduction
   first: RIGHT_HIP
   mid: LEFT_SHOULDER
   end: RIGHT_SHOULDER
 
 # LEG ANGLES
-- # Left leg: Hip to Ankle
+- # Left leg: Hip to Ankle Flexion
   first: LEFT_HIP
   mid: LEFT_KNEE
   end: LEFT_ANKLE
 
-- # Right leg: Hip to Ankle
+- # Right leg: Hip to Ankle Flexion
   first: RIGHT_HIP
   mid: RIGHT_KNEE
   end: RIGHT_ANKLE
 
 # TORSO ANGLES
-- # Torso twist: Left Shoulder to Right Hip
+- # Torso twist: Left Shoulder to Right Hip Rotation
   first: LEFT_SHOULDER
   mid: LEFT_HIP
   end: RIGHT_HIP
 
-- # Torso twist: Right Shoulder to Left Hip
+- # Torso twist: Right Shoulder to Left Hip Rotation
   first: RIGHT_SHOULDER
   mid: RIGHT_HIP
   end: LEFT_HIP
 
 # SPINE ANGLES
-- # Neck to Left Hip
+- # Neck to Left Hip Flexion
   first: NOSE
   mid: LEFT_SHOULDER
   end: LEFT_HIP
 
-- # Neck to Right Hip
+- # Neck to Right Hip Flexion
   first: NOSE
   mid: RIGHT_SHOULDER
   end: RIGHT_HIP
 
-# # HEAD ANGLES
-# - # Left Shoulder to Right Shoulder
-#   first: LEFT_SHOULDER
-#   mid: NOSE
-#   end: RIGHT_SHOULDER
+# HEAD ANGLES
+- # Neck to Neck Rotation
+  first: LEFT_SHOULDER
+  mid: NOSE
+  end: RIGHT_SHOULDER
+
+# ADDITIONAL ANGLES
+- # Left Shoulder to Left Elbow Flexion
+  first: LEFT_SHOULDER
+  mid: LEFT_ELBOW
+  end: NOSE
+
+- # Right Shoulder to Right Elbow Flexion
+  first: RIGHT_SHOULDER
+  mid: RIGHT_ELBOW
+  end: NOSE
+
+- # Left Hip to Left Knee Flexion
+  first: LEFT_HIP
+  mid: LEFT_KNEE
+  end: NOSE
+
+- # Right Hip to Right Knee Flexion
+  first: RIGHT_HIP
+  mid: RIGHT_KNEE
+  end: NOSE
+
+# WRIST ANGLES
+- # Left wrist to Left Elbow Flexion
+  first: LEFT_WRIST
+  mid: LEFT_ELBOW
+  end: NOSE
+
+- # Right wrist to Right Elbow Flexion
+  first: RIGHT_WRIST
+  mid: RIGHT_ELBOW
+  end: NOSE
+
+- # Left wrist to Right wrist Flexion
+  first: LEFT_WRIST
+  mid: NOSE
+  end: RIGHT_WRIST
+
+- # Left wrist to Right wrist Extension
+  first: LEFT_WRIST
+  mid: RIGHT_WRIST
+  end: NOSE

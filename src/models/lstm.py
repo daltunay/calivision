@@ -171,17 +171,9 @@ class LSTMClassifier(ClassifierModel):
                 total_loss += loss.item()  # Add the loss value to the total loss for the epoch
                 num_batches += 1
 
-                # Print average loss every 'print_freq' batches
-                print_freq = 10  # Adjust this value as needed
-                if num_batches % print_freq == 0:
-                    avg_loss = total_loss / num_batches
-                    pbar.set_postfix({"avg_loss": avg_loss})
-                    pbar.update(print_freq)
-
             # Update the progress bar after completing the epoch
-            avg_loss = total_loss / num_batches
-            pbar.set_postfix({"avg_loss": avg_loss})
-            pbar.update(num_batches % print_freq)
+            pbar.set_postfix({"loss": loss.item(), "total_loss": total_loss})
+            pbar.update(num_batches)
 
         pbar.set_description("[DONE] LSTM training")
         pbar.close()
