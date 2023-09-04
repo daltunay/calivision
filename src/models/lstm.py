@@ -129,15 +129,10 @@ class LSTMClassifier(ClassifierModel):
         return torch.stack(tensors)
 
     def fit(self, X: List[Union[JointSeries, AngleSeries]], y: List[str]) -> None:
-        """Fit the LSTM model to the training data.
+        # Configure logging
+        logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-        Args:
-            X (List[Union[JointSeries, AngleSeries]]): Input data.
-            y (List[str]): List of class labels.
-        """
-        logging.info(
-            f"Fitting LSTM classifier to training data: {len(X)} sample(s), {len(set(y))} unique labels"
-        )
+        logging.info(f"Fitting LSTM classifier to training data: {len(X)} sample(s), {len(set(y))} unique labels")
         y_encoded = self.label_encoder.fit_transform(y)
         y_encoded_tensors = torch.LongTensor(y_encoded)
 
@@ -146,37 +141,29 @@ class LSTMClassifier(ClassifierModel):
 
         train_loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
 
-        # Initialize tqdm progress bar
-        pbar = tqdm(
-            total=len(train_loader) * self.num_epochs,
-            desc="[TRAINING] LSTM",
-            position=0,
-            leave=True,
-            dynamic_ncols=True,
-        )
+        # Initialize epoch progress bar
+        for epoch in tqdm(range(1, self.num_epochs + 1), desc="[IN PROGRESS] LSTM training", leave=True):
+            epoch_loss = 0.0
 
-        for epoch in range(1, self.num_epochs + 1):
-            pbar.set_description(f"[IN PROGRESS] LSTM training - {epoch=}")
+            # Initialize batch progress bar
+            batch_pbar = tqdm(train_loader, desc=f"{epoch=} | progression", leave=False)
 
-            total_loss = 0.0  # Initialize total loss for the epoch
-            num_batches = 0  # Initialize the number of batches processed
-
-            for X_batch, y_batch in train_loader:
+            for num_batches, (X_batch, y_batch) in enumerate(batch_pbar, start=1):
                 self.optimizer.zero_grad()
                 outputs = self.model(X_batch)
                 loss = self.criterion(outputs, y_batch)
                 loss.backward()
                 self.optimizer.step()
 
-                total_loss += loss.item()  # Add the loss value to the total loss for the epoch
-                num_batches += 1
+                batch_loss = loss.item()
+                epoch_loss += batch_loss
+                avg_epoch_loss = epoch_loss / num_batches
 
-            # Update the progress bar after completing the epoch
-            pbar.set_postfix({"loss": loss.item(), "total_loss": total_loss})
-            pbar.update(num_batches)
+                batch_pbar.set_postfix({"batch_loss": batch_loss, "avg_epoch_loss": avg_epoch_loss})
 
-        pbar.set_description("[DONE] LSTM training")
-        pbar.close()
+            batch_pbar.close()
+
+        logging.info("[DONE] LSTM training")
         return self
 
     def predict(
