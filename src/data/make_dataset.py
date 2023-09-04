@@ -1,4 +1,5 @@
 import argparse
+import contextlib
 import json
 import logging
 import os
@@ -71,7 +72,8 @@ class DatasetProcessor:
                     self.dataset_folder, "raw", dataset_name, label, video_name
                 )
 
-                self.process_and_save_video(dataset_name, label, video_name, video_path)
+                with contextlib.suppress(Exception):
+                    self.process_and_save_video(dataset_name, label, video_name, video_path)
 
     def process_and_save_video(
         self, dataset_name: str, label: str, video_name: str, video_path: str
