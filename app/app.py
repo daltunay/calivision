@@ -12,4 +12,4 @@ pose_estimation_app_instance = PoseEstimationApp()
 app.pose_estimation_app_instance = pose_estimation_app_instance
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
