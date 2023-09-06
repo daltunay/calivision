@@ -49,7 +49,7 @@ class FourierSeries(pd.DataFrame):
         ).transpose()
         transformed_df = transformed_df[transformed_df.index > 0]
 
-        self.index = transformed_df.index
+        self.index = np.around(transformed_df.index, 3)
         self.index.name = "frequency"
         self.loc[:, transformed_df.columns] = transformed_df.values
         self.columns = transformed_df.columns

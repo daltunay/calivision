@@ -4,6 +4,7 @@ from typing import Optional
 
 import pandas as pd
 import yaml
+import numpy as np
 from tsmoothie.smoother import LowessSmoother
 
 from ..utils import calculate_angle
@@ -73,7 +74,7 @@ class AngleSeries(pd.DataFrame):
             columns=self._joint_series.index,
         ).T
 
-        self.index = angles_df.index
+        self.index = np.around(angles_df.index, 3)
         self.loc[:, angles_df.columns] = angles_df.values
         self.columns = angles_df.columns
         return None

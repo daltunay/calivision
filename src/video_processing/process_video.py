@@ -112,11 +112,14 @@ class VideoProcessor:
         )
 
         # Initialization
-        success, frame = self.cap.read()  # Read first frame
         self.pbar = self._initialize_progress_bar()
 
         # Loop over all frames
+        success=True
         while success:
+            success, frame = self.cap.read()
+            if not success:
+                break
             self.pbar.update(1)
 
             # Process frame
@@ -143,11 +146,7 @@ class VideoProcessor:
                 # Manual exit
                 if cv2.waitKey(1) & 0xFF == ord("\x1b"):  # Press Esc
                     show = False
-                    cv2.destroyAllWindows()
                     break
-
-            success, frame = self.cap.read()  # Read next frame
-
         # Cleanup
         self._terminate()
         return None

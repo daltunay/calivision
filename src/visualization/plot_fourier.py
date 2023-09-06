@@ -19,7 +19,7 @@ def visible_angles_only(
     visibility_frame = (
         fourier_frame._angle_series._joint_series.loc[:, (slice(None), "visibility")]
         .droplevel(level=1, axis=1)
-        .applymap(lambda visibility: visibility > visibility_threshold)
+        .map(lambda visibility: visibility > visibility_threshold)
     )
 
     # Calculate the minimum number of visible timestamps required

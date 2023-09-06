@@ -70,7 +70,7 @@ class JointSeries(pd.DataFrame):
         )
         joints_df.index.name = "timestamp"
 
-        self.index = joints_df.index
+        self.index = np.around(joints_df.index, 3)
         self.loc[:, joints_df.columns] = joints_df.values
         self.columns = joints_df.columns
         return None

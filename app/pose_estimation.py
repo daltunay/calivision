@@ -5,7 +5,6 @@ from io import BytesIO
 import cv2
 import plotly
 from flask import Response, render_template
-
 from src.features import AngleSeries, FourierSeries, JointSeries
 from src.video_processing.process_video import PoseEstimator, VideoProcessor
 from src.visualization import (
