@@ -23,12 +23,12 @@ Calivision is a web application designed to enhance your fitness experience. It 
 
 CaliVision provides flexibility with various pose estimation parameters:
 
-|         Parameter          | Description                                                                                                                      |
-| :------------------------: | -------------------------------------------------------------------------------------------------------------------------------- |
-| `min_detection_confidence` | The minimum confidence score for the pose detection to be considered successful                                                  |
-| `min_tracking_confidence`  | The minimum confidence score for the pose tracking to be considered successful                                                   |
-|     `model_complexity`     | Complexity of the pose landmark model. Landmark accuracy as well as inference latency generally go up with the model complexity. |
-|        `skip_frame`        | Number of frames to skip between two consecutive processed frames.                                                               |
+|         Parameter          | Description                                                                                                                     |
+| :------------------------: | ------------------------------------------------------------------------------------------------------------------------------- |
+| `min_detection_confidence` | The minimum confidence score for the pose detection to be considered successful                                                 |
+| `min_tracking_confidence`  | The minimum confidence score for the pose tracking to be considered successful                                                  |
+|     `model_complexity`     | Complexity of the pose landmark model. Landmark accuracy as well as inference latency generally go up with the model complexity |
+|        `skip_frame`        | Number of frames to skip between two consecutive processed frames. Higher value means less processing time                      |
 
 ### Action Recognition Options
 
@@ -40,8 +40,8 @@ Choose from different methods for action recognition:
 
 | Model  | Description                                                                                               |
 | :----: | --------------------------------------------------------------------------------------------------------- |
-| `LSTM` | [Long Short-Term Memory](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html): PyTorch           |
-| `k-NN` | [k-Nearest Neighbors](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm): custom implementation |
+| `lstm` | [Long Short-Term Memory](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html): PyTorch           |
+| `knn`  | [k-Nearest Neighbors](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm): custom implementation |
 
 #### INPUT TYPE
 
@@ -55,6 +55,16 @@ Choose from different methods for action recognition:
 
 #### METRIC
 
+#### INPUT TYPE
+> see [/src/features/](https://github.com/daltunay/calivision/blob/master/src/features/)
+
+| Input Type | Description                                                                                                                                         |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Joints     | Input based on joint position coordinates (x, y, z)                                                                                                 |
+| Angles     | Input based on body angles (see [/src/features/joints_data.yaml](https://github.com/daltunay/calivision/blob/master/src/features/joints_data.yaml)) |
+| Fourier    | Input based on Fourier spectral domains (magnitude and phase)                                                                                       |
+
+#### METRIC
 > see [/src/distance_metrics/](https://github.com/daltunay/calivision/blob/master/src/distance_metrics/)
 
 | Metric | Description                                                                            |
