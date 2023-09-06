@@ -35,16 +35,22 @@ Calivision provides flexibility with various pose estimation parameters:
 
 Choose from different methods for action recognition:
 
+#### MODEL
+
 | Model          | Description                                      |
 | -------------- | ------------------------------------------------ |
 | LSTM (PyTorch) | Deep learning-based model for action recognition |
 | k-NN (Custom)  | Custom k-nearest neighbors implementation        |
 
-| Input Type | Description                                                      |
-| ---------- | ---------------------------------------------------------------- |
-| Joints     | Input based on joint position coordinates (x, y, z)              |
-| Angles     | Input based on joint angles (see /src/features/joints_data.yaml) |
-| Fourier    | Input based on Fourier transforms (magnitude and phase)          |
+#### INPUT TYPE
+
+| Input Type | Description                                                                                                                                          |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Joints     | Input based on joint position coordinates (x, y, z)                                                                                                  |
+| Angles     | Input based on joint angles (see [/src/features/joints_data.yaml](https://github.com/daltunay/calivision/blob/master/src/features/joints_data.yaml)) |
+| Fourier    | Input based on Fourier transforms (magnitude and phase)                                                                                              |
+
+#### METRIC
 
 | Metric | Description                |
 | ------ | -------------------------- |
@@ -81,11 +87,11 @@ This is the interactive 4D plot : `(x, y, z, t)`.
 As for the angles, there are two different plots on the page.
 #### Time series
 
-The first plot is a multivariate time series visualization, showing angle values over time.
+The first plot is a multivariate time series visualization, showing angle values over time. You can choose to normalize each angle time series, using the interactive buttton.
 ![time series](screenshots/angle_evolution_time_series.png)
 #### Heatmap
 
-This second plot is a heatmap, which shows the same data as above but in another manner.
+This second plot is a heatmap, which shows the same data as above but in another manner. You can choose to normalize the values horizontally, using the interactive buttton.
 ![heatmap](screenshots/angle_evolution_heatmap.png)
 
 ### Fourier transform
