@@ -43,8 +43,33 @@ cd app
 flask run
 ```
 
-## Architecture
+Then go to **localhost**: http://127.0.0.1:5000/
 
+## Screenshots
+
+### Front page
+![front page](screenshots/front_page.png)
+### Pose estimation
+![pose estimation](screenshots/pose_estimation.png)
+
+### Explore data
+![explore data](screenshots/explore_data.png)
+
+### Interactive 3D joints visualization
+![joints visualization](screenshots/joints_visualization.png)
+
+### Angle evolution
+![time series](screenshots/angle_evolution_time_series.png)
+![heatmap](screenshots/angle_evolution_heatmap.png)
+
+### Fourier transform
+![magnitude](screenshots/fourier_magnitude.png)
+![phase](screenshots/fourier_phase.png)
+
+### Action recognition
+![action recognition](screenshots/action_recognition.png)
+
+## Architecture
 ```
 ┣ 📂app
 ┃ ┣ 📂routes
