@@ -29,7 +29,6 @@ Calivision provides flexibility with various pose estimation parameters:
 | min_tracking_confidence  | The minimum confidence score for the pose tracking to be considered successful                                                   |
 | model_complexity         | Complexity of the pose landmark model. Landmark accuracy as well as inference latency generally go up with the model complexity. |
 | skip_frame               | Number of frames to skip between two consecutive processed frames.                                                               |
-|                          |
 
 ### Action Recognition Options
 
