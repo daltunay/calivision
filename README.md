@@ -21,7 +21,7 @@ Calivision is a web application designed to enhance your fitness experience. It 
 
 ### Pose Estimation Parameters
 
-CaliVision provides flexibility with various pose estimation parameters:
+Calivision provides flexibility with various pose estimation parameters:
 
 |         Parameter          | Description                                                                                                                     |
 | :------------------------: | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -52,17 +52,6 @@ Choose from different methods for action recognition:
 |  `joints`  | Input based on joint position coordinates (x, y, z) over time                                                                                                              |
 |  `angles`  | Input based on body angles (see [/src/features/joints_data.yaml](https://github.com/daltunay/calivision/blob/master/src/features/joints_data.yaml) for the list) over time |
 | `fourier`  | Input based on Fourier spectral domains (magnitude and phase)                                                                                                              |
-
-#### METRIC
-
-#### INPUT TYPE
-> see [/src/features/](https://github.com/daltunay/calivision/blob/master/src/features/)
-
-| Input Type | Description                                                                                                                                         |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Joints     | Input based on joint position coordinates (x, y, z)                                                                                                 |
-| Angles     | Input based on body angles (see [/src/features/joints_data.yaml](https://github.com/daltunay/calivision/blob/master/src/features/joints_data.yaml)) |
-| Fourier    | Input based on Fourier spectral domains (magnitude and phase)                                                                                       |
 
 #### METRIC
 > see [/src/distance_metrics/](https://github.com/daltunay/calivision/blob/master/src/distance_metrics/)
