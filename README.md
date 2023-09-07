@@ -35,7 +35,6 @@ Calivision provides flexibility with various pose estimation parameters:
 Choose from different methods for action recognition:
 
 #### MODEL
-
 > see [/src/models/](https://github.com/daltunay/calivision/blob/master/src/models/)
 
 | Model  | Description                                                                                               |
@@ -44,7 +43,6 @@ Choose from different methods for action recognition:
 | `knn`  | [k-Nearest Neighbors](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm): custom implementation |
 
 #### INPUT TYPE
-
 > see [/src/features/](https://github.com/daltunay/calivision/blob/master/src/features/)
 
 | Input Type | Description                                                                                                                                                                |
