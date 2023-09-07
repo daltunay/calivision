@@ -1,4 +1,4 @@
-# Calivision - Your Fitness Companion
+# Calivision - Your Calisthenics Companion
 
 Calivision is a web application designed to enhance your fitness experience. It offers advanced body pose estimation and action recognition, making it the perfect tool for tracking your workouts.
 
