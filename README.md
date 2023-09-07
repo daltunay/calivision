@@ -21,14 +21,14 @@ Calivision is a web application designed to enhance your fitness experience. It 
 
 ### Pose Estimation Parameters
 
-Calivision provides flexibility with various pose estimation parameters:
+CaliVision provides flexibility with various pose estimation parameters:
 
-| Parameter                | Description                                                                                                                      |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| min_detection_confidence | The minimum confidence score for the pose detection to be considered successful                                                  |
-| min_tracking_confidence  | The minimum confidence score for the pose tracking to be considered successful                                                   |
-| model_complexity         | Complexity of the pose landmark model. Landmark accuracy as well as inference latency generally go up with the model complexity. |
-| skip_frame               | Number of frames to skip between two consecutive processed frames.                                                               |
+|         Parameter          | Description                                                                                                                      |
+| :------------------------: | -------------------------------------------------------------------------------------------------------------------------------- |
+| `min_detection_confidence` | The minimum confidence score for the pose detection to be considered successful                                                  |
+| `min_tracking_confidence`  | The minimum confidence score for the pose tracking to be considered successful                                                   |
+|     `model_complexity`     | Complexity of the pose landmark model. Landmark accuracy as well as inference latency generally go up with the model complexity. |
+|        `skip_frame`        | Number of frames to skip between two consecutive processed frames.                                                               |
 
 ### Action Recognition Options
 
@@ -36,28 +36,34 @@ Choose from different methods for action recognition:
 
 #### MODEL
 
-| Model          | Description                                      |
-| -------------- | ------------------------------------------------ |
-| LSTM (PyTorch) | Deep learning-based model for action recognition |
-| k-NN (Custom)  | Custom k-nearest neighbors implementation        |
+> see [/src/models/](https://github.com/daltunay/calivision/blob/master/src/models/)
+
+| Model  | Description                                                                                               |
+| :----: | --------------------------------------------------------------------------------------------------------- |
+| `LSTM` | [Long Short-Term Memory](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html): PyTorch           |
+| `k-NN` | [k-Nearest Neighbors](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm): custom implementation |
 
 #### INPUT TYPE
 
-| Input Type | Description                                                                                                                                          |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Joints     | Input based on joint position coordinates (x, y, z)                                                                                                  |
-| Angles     | Input based on joint angles (see [/src/features/joints_data.yaml](https://github.com/daltunay/calivision/blob/master/src/features/joints_data.yaml)) |
-| Fourier    | Input based on Fourier transforms (magnitude and phase)                                                                                              |
+> see [/src/features/](https://github.com/daltunay/calivision/blob/master/src/features/)
+
+| Input Type | Description                                                                                                                                                                |
+| :--------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  `joints`  | Input based on joint position coordinates (x, y, z) over time                                                                                                              |
+|  `angles`  | Input based on body angles (see [/src/features/joints_data.yaml](https://github.com/daltunay/calivision/blob/master/src/features/joints_data.yaml) for the list) over time |
+| `fourier`  | Input based on Fourier spectral domains (magnitude and phase)                                                                                                              |
 
 #### METRIC
 
-| Metric | Description                |
-| ------ | -------------------------- |
-| L1     | Manhattan distance         |
-| L2     | Euclidean distance         |
-| DTW    | Dynamic Time Warping       |
-| LCSS   | Longest Common Subsequence |
-| EMD    | Earth Mover's Distance     |
+> see [/src/distance_metrics/](https://github.com/daltunay/calivision/blob/master/src/distance_metrics/)
+
+| Metric | Description                                                                            |
+| ------ | -------------------------------------------------------------------------------------- |
+| `l1`   | [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry)                   |
+| `l2`   | [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance)                 |
+| `dtw`  | [Dynamic Time Warping](https://en.wikipedia.org/wiki/Dynamic_time_warping)             |
+| `lcss` | [Longest Common Subsequence](https://en.wikipedia.org/wiki/Longest_common_subsequence) |
+| `emd`  | [Earth Mover's Distance](https://en.wikipedia.org/wiki/Earth_mover%27s_distance)       |
 
 ## Screenshots
 
@@ -78,7 +84,7 @@ On this page, you have the choice between visualizing several plots, exporting t
 
 ### Interactive 3D joints visualization
 
-This is the interactive 4D plot : `(x, y, z, t)`.
+This is the interactive 4D plot : `(x, y, z, t)`. Use the cursor to move through time.
 ![joints visualization](screenshots/joints_visualization.png)
 
 ### Angle evolution
