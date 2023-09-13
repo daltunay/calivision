@@ -68,6 +68,49 @@ This shows the phase for each frequency value, for each angle.
 This is the page you land on after clicking on the prediction button. The results depend on the model and parameters you chose.
 ![action recognition](screenshots/action_recognition.png)
 
+## Requirements
+
+- Python >= 3.9
+- Poetry (https://python-poetry.org/)
+
+## Setup
+
+0. (Optional) Install poetry:
+
+```bash
+pip install poetry
+```
+
+1. Clone this repository:
+
+```bash
+git clone https://github.com/daltunay/calivision.git
+```
+
+2. Navigate to the project directory:
+
+```bash
+cd calivision
+```
+
+3. Activate poetry shell and install dependencies:
+
+```bash
+poetry shell
+poetry install
+```
+
+## Usage
+
+To run web app, do the following:
+
+```bash
+cd app
+flask run
+```
+
+Then go to **localhost**: http://127.0.0.1:5000/, and enjoy!
+
 ## Configuration Options
 
 ### Pose Estimation Parameters
@@ -112,46 +155,3 @@ Choose from different methods for action recognition:
 | `dtw`  | [Dynamic Time Warping](https://en.wikipedia.org/wiki/Dynamic_time_warping)             |
 | `lcss` | [Longest Common Subsequence](https://en.wikipedia.org/wiki/Longest_common_subsequence) |
 | `emd`  | [Earth Mover's Distance](https://en.wikipedia.org/wiki/Earth_mover%27s_distance)       |
-
-## Requirements
-
-- Python >= 3.9
-- Poetry (https://python-poetry.org/)
-
-## Setup
-
-0. (Optional) Install poetry:
-
-```bash
-pip install poetry
-```
-
-1. Clone this repository:
-
-```bash
-git clone https://github.com/daltunay/calivision.git
-```
-
-2. Navigate to the project directory:
-
-```bash
-cd calivision
-```
-
-3. Activate poetry shell and install dependencies:
-
-```bash
-poetry shell
-poetry install
-```
-
-## Usage
-
-To run web app, do the following:
-
-```bash
-cd app
-flask run
-```
-
-Then go to **localhost**: http://127.0.0.1:5000/, and enjoy!
